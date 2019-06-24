@@ -11,6 +11,7 @@ func init() {
 	beego.Router("signinform", &controllers.HtmlController{}, "get:SigninForm")
 	beego.Router("signupform", &controllers.HtmlController{}, "get:SignupForm")
 	beego.Router("/app", &controllers.HtmlController{}, "get:App")
+	beego.Router("/notfound", &controllers.HtmlController{}, "get:NotFound")
 
 	//Auth Router: auth receive info
 	beego.Router("/auth/signin", &controllers.AuthController{}, "post:AuthSignin")

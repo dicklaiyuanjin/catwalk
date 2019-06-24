@@ -17,7 +17,8 @@
 | / | Html | get:Index |
 | /signinform | Html | get:SigninForm |
 | /signupform | Html | get:SignupForm |
-| /App | Html | get:App |
+| /app | Html | get:App |
+| /notfound | Html | get:NotFound |
 | /auth/signin | Auth | post:AuthSignin |
 | /auth/signup | Auth | post:AuthSignup |
 | /ws/join/user | Ws | get:JoinUser |
