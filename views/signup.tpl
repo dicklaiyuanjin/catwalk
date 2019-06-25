@@ -45,15 +45,39 @@
       </div>
     </nav>
 
-    <div class="jumbotron text-center">
-      <h1>Welcome to Catwalk</h1>
-      <p>Catwalk is a project to implement an IM system.</p>
-      <p>For me, the object of creating this project is to study building web application with golang.</p>
-      <p>As we all known, building web app is not easy. It needs many skills as well as tools.</p>
-      <p>
-        <a class="btn btn-primary btn-lg" href="/signinform">Sign in</a>
-        <a class="btn btn-success btn-lg" href="/signupform">Sign up</a>
-      </p>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-4 col-md-offset-4 col-xs-10 col-xs-offset-1 col-sm-8 col-sm-offset-2 col-lg-4 col-lg-offset-4">
+          <form class="form-horizontal">
+            <div class="form-group">
+              <label for="username" class="col-sm-2 control-label">Username</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" id="username" placeholder="Username...">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="password" class="col-sm-2 control-label">Password</label>
+              <div class="col-sm-10">
+                <input type="password" class="form-control" id="password" placeholder="Password...">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="captcha" class="col-sm-2 control-label">Captcha</label>
+              <div class="col-sm-8">
+                <input type="text" class="form-control" id="captcha" placeholder="Captcha...">
+              </div>
+              <div class="col-sm-2">
+                <img src="" alt="Captcha" />
+              </div>
+            </div>
+            <div class="form-group text-right">
+              <div class="col-sm-offset-2 col-sm-10">
+                <button class="btn btn-success">Sign up</button>
+              </div>
+            </div>
+          </form> 
+        </div>
+      </div>
     </div>
 
 

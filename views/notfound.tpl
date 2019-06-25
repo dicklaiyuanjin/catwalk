@@ -23,40 +23,6 @@
   </head>
 
   <body>
-    <nav class="navbar navbar-default">
-      <div class="container-fluid">
-        
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="/">Catwalk</a>
-        </div>
-
-        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-          <ul class="nav navbar-nav navbar-right">
-            <li class="text-center"><a href="/signinform">Sign in</a></li>
-            <li class="text-center"><a href="/signupform">Sign up</a></li>
-          </ul>
-        </div>
-      </div>
-    </nav>
-
-    <div class="jumbotron text-center">
-      <h1>Welcome to Catwalk</h1>
-      <p>Catwalk is a project to implement an IM system.</p>
-      <p>For me, the object of creating this project is to study building web application with golang.</p>
-      <p>As we all known, building web app is not easy. It needs many skills as well as tools.</p>
-      <p>
-        <a class="btn btn-primary btn-lg" href="/signinform">Sign in</a>
-        <a class="btn btn-success btn-lg" href="/signupform">Sign up</a>
-      </p>
-    </div>
-
-
     <!-- jQuery (Bootstrap 的所有 JavaScript 插件都依赖 jQuery，所以必须放在前边) -->
     <script src="https://cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
     <!-- 加载 Bootstrap 的所有 JavaScript 插件。你也可以根据需要只加载单个插件。 -->
