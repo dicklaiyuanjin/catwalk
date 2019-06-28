@@ -19,6 +19,7 @@
 | /signupform | Html | get:SignupForm |
 | /app | Html | get:App |
 | /notfound | Html | get:NotFound |
+| /auth/captcha | Auth | get:AuthCaptcha |
 | /auth/signin | Auth | post:AuthSignin |
 | /auth/signup | Auth | post:AuthSignup |
 | /ws/join/user | Ws | get:JoinUser |
@@ -27,3 +28,16 @@
 * Html: return some html page.
 * Auth: do something about authorization, such as authorize user signin.
 * Ws: handle websocket request.
+
+# models
+## database design
+* table:
+```sql
+CREATE TABLE `user` (
+	`uid` INT(10) NOT NULL AUTO_INCREMENT,
+	`username` VARCHAR(64) NOT NULL UNIQUE,
+	`password` BLOB NOT NULL,
+	`isactive` INT(1),
+	PRIMARY KEY (`uid`)
+);
+```

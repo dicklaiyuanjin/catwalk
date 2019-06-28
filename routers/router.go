@@ -14,6 +14,7 @@ func init() {
 	beego.Router("/notfound", &controllers.HtmlController{}, "get:NotFound")
 
 	//Auth Router: auth receive info
+  beego.Router("/auth/captcha", &controllers.AuthController{}, "post:AuthCaptcha")
 	beego.Router("/auth/signin", &controllers.AuthController{}, "post:AuthSignin")
 	beego.Router("/auth/signup", &controllers.AuthController{}, "post:AuthSignup")
 
