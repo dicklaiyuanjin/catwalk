@@ -20,22 +20,45 @@ func captchaHelper(this *HtmlController) {
   this.Data["captcha"] = template.URL(captcha)
 }
 
-func (this *HtmlController) SigninForm() {
+type signInfo struct {
+  btnsignid string
+  btnclass string
+  btnvalue string
+  jsfile string
+}
+
+func signformHelper(this *HtmlController, si *signInfo) {
   if this.GetSession("username") != nil {
     this.Ctx.Redirect(302, "/app")
   } else {
+    this.Data["btnsignid"] = si.btnsignid
+    this.Data["btnclass"] = si.btnclass
+    this.Data["btnvalue"] = si.btnvalue
+    this.Data["jsfile"] = si.jsfile
     captchaHelper(this)
-    this.TplName = "signin.tpl"
+    this.TplName = "sign.tpl"
   }
 }
 
-func (this *HtmlController) SignupForm() {
-  if this.GetSession("username") != nil {
-    this.Ctx.Redirect(302, "/app")
-  } else {
-    captchaHelper(this)
-    this.TplName = "signup.tpl"
+func (this *HtmlController) SigninForm() {
+  si := signInfo{
+    btnsignid: "signinbtn",
+    btnclass: "btn-primary",
+    btnvalue: "Sign in",
+    jsfile: "signin.js",
   }
+  signformHelper(this, &si)
+}
+
+func (this *HtmlController) SignupForm() { 
+  si := signInfo{
+    btnsignid: "signupbtn",
+    btnclass: "btn-success",
+    btnvalue: "Sign up",
+    jsfile: "signup.js",
+  }
+  signformHelper(this, &si)
+
 }
 
 func (this *HtmlController) App() {

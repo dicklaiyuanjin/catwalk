@@ -36,6 +36,7 @@ func (this *HtmlController) NotFound()
 
 //other thing, help create a captcha data
 func captchaHelper(this *HtmlController)
+func signformHelper(this *HtmlController, si *signInfo)
 ```
 * Auth: do something about authorization, such as authorize user signin.
 ```golang
@@ -136,20 +137,17 @@ func AnalyzeUserJson(user *UserJSON, resbody []byte) bool
 ```
 
 # front-end
-* use tools:
-  ** bootstrap 3.3.7
+* use tools:  bootstrap 3.3.7
 * views design:
 ```
 └── views
     ├── app.tpl
     ├── index.tpl
     ├── notfound.tpl
-    ├── signin.tpl
-    ├── signup.tpl
+    ├── sign.tpl
     └── tpl
         ├── head.tpl
-        ├── signformhead.tpl
-        ├── signformtail.tpl
+        ├── signform.tpl
         └── tail.tpl
 ```
 
