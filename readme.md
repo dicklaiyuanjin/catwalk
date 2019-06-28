@@ -10,8 +10,9 @@
 # the skills and tools
 * [beego](https://github.com/astaxie/beego)
 
+# back-end
 
-# Router design
+## Router design
 | url | ctlr | method |
 | :-- | :--- | :----- |
 | / | Html | get:Index |
@@ -24,7 +25,7 @@
 | /auth/signup | Auth | post:AuthSignup |
 | /ws/join/user | Ws | get:JoinUser |
 
-# controller design
+## controller design
 * Html: return some html page.
 ```golang
 func (this *HtmlController) Index()
@@ -64,9 +65,8 @@ func (this *AuthController) AuthSignup()
 * Ws: handle websocket request.
 * other thing: helper func will help handle some problem.
 
-# models
-## database design
-* table:
+## models
+* database table:
 ```sql
 CREATE TABLE `user` (
 	`uid` INT(10) NOT NULL AUTO_INCREMENT,
@@ -134,3 +134,50 @@ type SignErr struct {
 //save data from front-end to UserJSON
 func AnalyzeUserJson(user *UserJSON, resbody []byte) bool
 ```
+
+# front-end
+* use tools:
+  ** bootstrap 3.3.7
+* views design:
+```
+└── views
+    ├── app.tpl
+    ├── index.tpl
+    ├── notfound.tpl
+    ├── signin.tpl
+    ├── signup.tpl
+    └── tpl
+        ├── head.tpl
+        ├── signformhead.tpl
+        ├── signformtail.tpl
+        └── tail.tpl
+```
+
+* static resouces:
+```
+├── static
+│   ├── css
+│   │   └── basic.css
+│   ├── img
+│   │   └── icon.png
+│   └── js
+│       ├── captcha.js
+│       ├── signin.js
+│       ├── sign.js
+│       └── signup.js
+```
+* about the js:
+  ** captcha.js: refresh the captcha picture
+  ** sign.js: the function package to help signin or signup
+  ```javascript
+  // validate userinfo, and push the error msg to user
+  function validate_userinfo(usr, pwd, cit)
+
+  //push user info to back-end
+  function ajaxSign(action)
+
+  //to listen submit button
+  function signListener(action)
+  ```
+  ** signin.js and signup.js: to use function from sign.js
+
