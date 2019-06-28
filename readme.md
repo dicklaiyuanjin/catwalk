@@ -167,17 +167,17 @@ func AnalyzeUserJson(user *UserJSON, resbody []byte) bool
 │       └── signup.js
 ```
 * about the js:
-  ** captcha.js: refresh the captcha picture
-  ** sign.js: the function package to help signin or signup
-  ```javascript
-  // validate userinfo, and push the error msg to user
-  function validate_userinfo(usr, pwd, cit)
+1. captcha.js: refresh the captcha picture
+2. sign.js: the function package to help signin or signup
+```javascript
+// validate userinfo, and push the error msg to user
+function validate_userinfo(usr, pwd, cit)
 
-  //push user info to back-end
-  function ajaxSign(action)
+//push user info to back-end
+function ajaxSign(action)
 
-  //to listen submit button
-  function signListener(action)
-  ```
-  ** signin.js and signup.js: to use function from sign.js
+//to listen submit button
+function signListener(action)
+```
+3. signin.js and signup.js: to use function from sign.js
 
