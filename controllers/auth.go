@@ -38,11 +38,13 @@ func (this *AuthController) AuthSignup() {
   b := models.SignErr{State: 0}
   var user models.UserJSON
   if models.AnalyzeUserJson(&user, this.Ctx.Input.RequestBody) == true {
-    if models.ExistUsername(user.Username) == false {
-      if models.InsertUser(&user) == true {
-        models.SetUserActive(user.Username)
-        this.SetSession("username", user.Username)
-        b = models.SignErr{State: 1}
+    if models.VerifyCaptcha(this.GetSession("idkey").(string), user.Captchainput) {
+      if models.ExistUsername(user.Username) == false {
+        if models.InsertUser(&user) == true {
+          models.SetUserActive(user.Username)
+          this.SetSession("username", user.Username)
+          b = models.SignErr{State: 1}
+        }
       }
     }
   }
