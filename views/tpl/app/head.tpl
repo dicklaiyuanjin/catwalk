@@ -20,7 +20,7 @@
     <![endif]-->
   
     <link rel="stylesheet" href="/static/css/basic.css">
-    <link rel="stylesheet" href="/static/css/sign.css">
+    <link rel="stylesheet" href="/static/css/setting.css">
   </head>
 
   <body>
@@ -34,13 +34,14 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="/">Catwalk</a>
+          <a class="navbar-brand" href="#">Catwalk</a>
         </div>
 
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-          <ul class="nav navbar-nav navbar-right">
-            <li class="text-center"><a href="/signinform">Sign in</a></li>
-            <li class="text-center"><a href="/signupform">Sign up</a></li>
+          <ul class="nav navbar-nav navbar-right" role="tablist">
+            <li role="presentation" class="text-center active"><a href="#chatroom" aria-controls="chatroom" role="tab" data-toggle="tab">chatroom</a></li>
+            <li role="presentation" class="text-center"><a href="#invitation" aria-controls="invitation" role="tab" data-toggle="tab">Invitation</a></li>
+            <li role="presentation" class="text-center"><a href="#setting" aria-controls="setting" role="tab" data-toggle="tab">Setting</a></li>
           </ul>
         </div>
       </div>

@@ -50,7 +50,7 @@ func (this *HtmlController) SigninForm() {
   signformHelper(this, &si)
 }
 
-func (this *HtmlController) SignupForm() { 
+func (this *HtmlController) SignupForm() {
   si := signInfo{
     btnsignid: "signupbtn",
     btnclass: "btn-success",
@@ -59,10 +59,6 @@ func (this *HtmlController) SignupForm() {
   }
   signformHelper(this, &si)
 
-}
-
-func (this *HtmlController) App() {
-	this.TplName = "app.tpl"
 }
 
 func (this *HtmlController) NotFound() {

@@ -1,16 +1,10 @@
 package models
 
 import (
-  "golang.org/x/crypto/scrypt"
   "github.com/astaxie/beego/orm"
-   _ "github.com/go-sql-driver/mysql"
+  "golang.org/x/crypto/scrypt"
 )
 
-func init() {
-  orm.RegisterDriver("mysql", orm.DRMySQL)
-  orm.RegisterDataBase("default", "mysql", "dick:12345678@/catwalk?charset=utf8")
-  orm.Debug = true
-}
 
 func ExistUsername(username string) bool {
   o := orm.NewOrm()
@@ -40,7 +34,7 @@ func InsertUser(u *UserJSON) bool {
     return false
   }
   user.Password = string(pwd)
-  user.Isactive = false
+  user.Isactive = 0
 
   _, err = o.Insert(&user)
   if err == nil {
@@ -68,6 +62,7 @@ func byteSliceEqual(a, b []byte) bool {
     return true
 }
 
+
 func VerifyUser(u *UserJSON) bool {
   o := orm.NewOrm()
   o.Using("default")
@@ -78,7 +73,7 @@ func VerifyUser(u *UserJSON) bool {
   if err == orm.ErrNoRows || err == orm.ErrMissPK {
     return false
   } else {
-    if user.Isactive {
+    if user.Isactive == 1 {
       return false
     }
 
@@ -101,7 +96,7 @@ func SetUserActive(u string) bool {
   if err == orm.ErrNoRows || err == orm.ErrMissPK {
     return false
   } else {
-    user.Isactive = true
+    user.Isactive = 1
     if _, err = o.Update(&user); err == nil {
       return true
     } else {
@@ -120,7 +115,7 @@ func SetUserUnActive(u string) bool {
   if err == orm.ErrNoRows || err == orm.ErrMissPK {
     return false
   } else {
-    user.Isactive = false
+    user.Isactive = 0
     if _, err = o.Update(&user); err == nil {
       return true
     } else {
@@ -128,3 +123,4 @@ func SetUserUnActive(u string) bool {
     }
   }
 }
+

@@ -10,13 +10,18 @@ func init() {
 	beego.Router("/", &controllers.HtmlController{}, "get:Index")
 	beego.Router("signinform", &controllers.HtmlController{}, "get:SigninForm")
 	beego.Router("signupform", &controllers.HtmlController{}, "get:SignupForm")
-	beego.Router("/app", &controllers.HtmlController{}, "get:App")
 	beego.Router("/notfound", &controllers.HtmlController{}, "get:NotFound")
 
 	//Auth Router: auth receive info
   beego.Router("/auth/captcha", &controllers.AuthController{}, "post:AuthCaptcha")
 	beego.Router("/auth/signin", &controllers.AuthController{}, "post:AuthSignin")
 	beego.Router("/auth/signup", &controllers.AuthController{}, "post:AuthSignup")
+
+  //App Router: handle app and app ajax
+	beego.Router("/app", &controllers.AppController{}, "get:App")
+  beego.Router("/app/signout", &controllers.AppController{}, "get:AppSignout")
+  beego.Router("/app/edit", &controllers.AppController{}, "post:AppEdit")
+  beego.Router("/app/upload", &controllers.AppController{}, "post:AppUpload")
 
 	//Webocket Router: handle websocket
 	beego.Router("/ws/join/user", &controllers.WsController{}, "get:JoinUser")

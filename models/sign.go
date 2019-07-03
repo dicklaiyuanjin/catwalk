@@ -1,31 +1,32 @@
 package models
 
-import (
-  "encoding/json"
-)
-
-type UserJSON struct {
-  Username string `json:"username"`
-  Password string `json:"password"`
-  Captchainput string `json:"captchainput"`
-}
-
-
-
-func AnalyzeUserJson(user *UserJSON, resbody []byte) bool {
-  if err := json.Unmarshal(resbody, user); err == nil {
-    return true
+func AuthSignupHelper(b *SignErr, resbody []byte, idkey string) string {
+  var user UserJSON
+  var userinfo UserInfoJSON
+  if AnalyzeUserJson(&user, resbody) == false {
+    return ""
   }
-  return false
+
+  if ExistUsername(user.Username) == true {
+    return ""
+  }
+
+  if VerifyCaptcha(idkey, user.Captchainput) == false {
+    return ""
+  }
+
+  if InsertUser(&user) == false {
+    return ""
+  }
+
+  userinfo.Username = user.Username
+
+  if InsertUserInfo(&userinfo) == false {
+    return ""
+  }
+
+
+  SetUserActive(user.Username)
+  b.State = 1
+  return user.Username
 }
-
-/*
- * state=0: info error 
- * state=1: pass
- */
-type SignErr struct {
-  State int `json:"state"`
-}
-
-
-
