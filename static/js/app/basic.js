@@ -3,7 +3,6 @@
  */
 function ajax_request(url, method, jsondata, su_func) {
   var xhr = new XMLHttpRequest();
-  
   xhr.onreadystatechange = function(){
     // 通信成功时，状态值为4
     if (xhr.readyState === 4){

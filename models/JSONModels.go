@@ -18,6 +18,12 @@ type SignErr struct {
   State int `json:"state"`
 }
 
+
+type UserinfoErr struct {
+  Existnick int `json:"existnick"`
+  Existemail int `json:"existemail"`
+}
+
 type UserInfoJSON struct {
   Username string `json:"username"`
   Nickname string `json:"nickname"`

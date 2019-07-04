@@ -41,14 +41,13 @@ func (this *AppController) AppSignout() {
 }
 
 func (this *AppController) AppEdit() {
-  b := models.SignErr{State: 0}
+  b := models.UserinfoErr{
+    Existnick: 1,
+    Existemail: 1,
+  }
   var userinfo models.UserInfoJSON
   resbody := this.Ctx.Input.RequestBody
-  if models.AnalyzeUserInfoJson(&userinfo, resbody) == true {
-    if models.UpdateUserInfo(&userinfo) == true {
-      b.State = 1
-    }
-  }
+  models.EditHelper(&userinfo, resbody, &b)
   this.Data["json"] = b
   this.ServeJSON()
 }

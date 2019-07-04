@@ -64,8 +64,10 @@ func UpdateUserInfo(u *UserInfoJSON) bool {
     usr.Email = u.Email
     usr.Motto = u.Motto
 
-    if _, err := o.Update(&usr, "Nickname", "Email", "Motto"); err == nil {
-      return true
+    if num, err := o.Update(&usr, "Nickname", "Email", "Motto"); err == nil {
+      if num == 1 {
+        return true
+      }
     }
   }
 
@@ -85,4 +87,34 @@ func UpdateIconOfUserInfo(u *UserInfoJSON) bool {
     }
   }
   return false
+}
+
+func ExistNickname(nickname string) bool {
+  o := orm.NewOrm()
+  o.Using("default")
+
+  usr := Userinfo{Nickname: nickname}
+
+  err := o.Read(&usr, "Nickname")
+
+  if err == orm.ErrNoRows || err == orm.ErrMissPK {
+    return false
+  } else {
+    return true
+  }
+}
+
+func ExistEmail(email string) bool {
+  o := orm.NewOrm()
+  o.Using("default")
+
+  usr := Userinfo{Email: email}
+
+  err := o.Read(&usr, "Email")
+
+  if err == orm.ErrNoRows || err == orm.ErrMissPK {
+    return false
+  } else {
+    return true
+  }
 }

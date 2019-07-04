@@ -1,63 +1,109 @@
 /*
  * edit btn
  */
-function edit_su_func(xhr){
-  console.log(xhr);
-  var obj = JSON.parse(xhr.responseText);
-  switch (obj.state) {
-    case 0:
-      var hint = document.getElementById("hint");
-      hint.innerHTML = 'edit fail, please ask for administrator...';
-      break;
-    case 1:
-      break;
+var rawData =  {
+  username: document.getElementById("username").value,
+  nickname: document.getElementById("nickname").value,
+  email: document.getElementById("email").value,
+  motto: document.getElementById("motto").value,
+  icon: ""
+};
+
+function pushRawData (data) {
+  var nickname = document.getElementById("nickname");
+  var email = document.getElementById("email");
+  var motto = document.getElementById("motto");
+
+  nickname.value = data.nickname;
+  email.value = data.email;
+  motto.value = data.motto;
+}
+
+function isReadonly(arr) {
+  flag = true;
+  for (var i in arr) {
+    if(arr[i].getAttribute('readonly') == null) {
+      flag = false;
+    }
   }
+  return flag;
+}
+
+function removeAttrReadonly(arr) {
+  for(var i in arr) {
+    arr[i].removeAttribute('readonly');
+  }
+}
+
+function setAttrReadonly(arr) {
+  for(var i in arr) {
+    arr[i].setAttribute('readonly', 'readonly');
+  }
+}
+
+function getJsondata() {
+  return {
+    username: document.getElementById("username").value,
+    nickname: document.getElementById("nickname").value,
+    email: document.getElementById("email").value,
+    motto: document.getElementById("motto").value,
+    icon: ""
+  };
+}
+
+function setEditbtn(btn, html, val){
+  btn.innerHTML = html;
+  btn.setAttribute('class', val);
+}
+
+function sameAsBefore(data) {
+  if(data.nickname == rawData.nickname && 
+     data.email == rawData.email && 
+     data.motto == rawData.motto) {
+    return true;
+  }
+  return false;
 }
 
 function editbtn_click_handler() {
   var editbtn = document.getElementById("editbtn");
-
-  var nick = document.getElementById("nickname");
-  var email = document.getElementById("email");
-  var motto = document.getElementById("motto");
-
-  var readonly2 = email.getAttribute('readonly');
-  var readonly3 = motto.getAttribute('readonly');
-  var readonly4 = nick.getAttribute('readonly');
-
-
-  if (readonly2 != null || readonly3 != null || readonly4 != null) {
-    nick.removeAttribute('readonly');
-    email.removeAttribute('readonly');
-    motto.removeAttribute('readonly');
   
-    editbtn.innerHTML = 'Submit';
-    editbtn.setAttribute('class', 'widthbtn btn btn-default');
-  
+  var arr = [];
+  arr[0] = document.getElementById("nickname");
+  arr[1] = document.getElementById("email");
+  arr[2] = document.getElementById("motto");
+
+  if (isReadonly(arr) == true) {
+    removeAttrReadonly(arr);
+    setEditbtn(editbtn, 'Submit', 'widthbtn btn btn-default');
   } else {
-    nick.setAttribute('readonly', 'readonly');
-    email.setAttribute('readonly', 'readonly');
-    motto.setAttribute('readonly', 'readonly');
-    
-    editbtn.innerHTML = 'Edit';
-    editbtn.setAttribute('class', 'widthbtn btn btn-info');
-    
-    var val_usr = document.getElementById("username").value;
-    var val_nick = document.getElementById("nickname").value;
-    var val_email = document.getElementById("email").value;
-    var val_motto = document.getElementById("motto").value;
-    var jsondata = {
-      username: val_usr,
-      nickname: val_nick,
-      email: val_email,
-      motto: val_motto,
-      icon: ""
-    };
+    setAttrReadonly(arr);
+    setEditbtn(editbtn, 'Edit', 'widthbtn btn btn-info'); 
+    var jsondata = getJsondata();
+    if(sameAsBefore(jsondata) == false) {
+      ajax_request('/app/edit', 'POST', JSON.stringify(jsondata), function(xhr){
+        var obj = JSON.parse(xhr.responseText);
+        var hint = document.getElementById("hint");
+        var errmsg = ""; 
 
-    ajax_request('/app/edit', 'POST', JSON.stringify(jsondata), edit_su_func);
-  
+        if (obj.existnick == 1 && rawData.nickname != jsondata.nickname) {
+          errmsg += 'nickname is exist, please change it.';
+        } else {
+          rawData.nickname = document.getElementById("nickname").value;
+        }
+
+        if (obj.existemail == 1 && rawData.email != jsondata.email) {
+          errmsg += 'email is exist, please change it.';
+        } else {
+          rawData.email = document.getElementById("email").value;
+        }
+
+        rawData.motto = document.getElementById("motto").value;
+        pushRawData(rawData);
+        hint.innerHTML = errmsg;
+      });
+    }
   }
-
 }
 
 var editbtn = document.getElementById("editbtn");
@@ -94,14 +140,14 @@ signoutbtn.addEventListener('click', signoutbtn_click_handler, false);
  * upload btn
  */
 function upload_su_func(xhr) {
-  console.log(xhr);
   var obj = JSON.parse(xhr.responseText);
+  var hint = document.getElementById("hint");
   switch (obj.state) {
     case 0:
-      var hint = document.getElementById("hint");
       hint.innerHTML = 'upload fail, please ask for administrator...';
       break;
     case 1:
+      hint.innerHTML = 'upload success';
       break;
   }
 }
@@ -126,7 +172,6 @@ function upload_handler() {
       "motto": "",
       "icon": base64
     });
-    console.log(jsondata);
 
     ajax_request('/app/upload', 'POST', jsondata, upload_su_func);
   }
