@@ -14,6 +14,32 @@ func (this *HtmlController) Index() {
 	this.TplName = "index.tpl"
 }
 
+func (this *HtmlController) SigninForm() {
+  si := signInfo{
+    btnsignid: "signinbtn",
+    btnclass: "btn-primary",
+    btnvalue: "Sign in",
+    jsfile: "signin.js",
+  }
+  signformHelper(this, &si)
+}
+
+func (this *HtmlController) SignupForm() {
+  si := signInfo{
+    btnsignid: "signupbtn",
+    btnclass: "btn-success",
+    btnvalue: "Sign up",
+    jsfile: "signup.js",
+  }
+  signformHelper(this, &si)
+
+}
+
+func (this *HtmlController) NotFound() {
+	this.TplName = "notfound.tpl"
+}
+
+
 func captchaHelper(this *HtmlController) {
   idkey, captcha := models.CaptchaCreate()
   this.SetSession("idkey", idkey)
@@ -38,29 +64,4 @@ func signformHelper(this *HtmlController, si *signInfo) {
     captchaHelper(this)
     this.TplName = "sign.tpl"
   }
-}
-
-func (this *HtmlController) SigninForm() {
-  si := signInfo{
-    btnsignid: "signinbtn",
-    btnclass: "btn-primary",
-    btnvalue: "Sign in",
-    jsfile: "signin.js",
-  }
-  signformHelper(this, &si)
-}
-
-func (this *HtmlController) SignupForm() {
-  si := signInfo{
-    btnsignid: "signupbtn",
-    btnclass: "btn-success",
-    btnvalue: "Sign up",
-    jsfile: "signup.js",
-  }
-  signformHelper(this, &si)
-
-}
-
-func (this *HtmlController) NotFound() {
-	this.TplName = "notfound.tpl"
 }
