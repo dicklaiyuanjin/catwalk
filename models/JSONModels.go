@@ -32,6 +32,12 @@ type UserInfoJSON struct {
   Icon string `json"icon"`
 }
 
+type InvitationJSON struct {
+  Sender string `json:"sender"`
+  Receiver string `json:"receiver"`
+  Msg string `json:"msg"`
+}
+
 
 func AnalyzeUserJson(user *UserJSON, resbody []byte) bool {
   if err := json.Unmarshal(resbody, user); err == nil {

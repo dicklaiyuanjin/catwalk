@@ -19,9 +19,16 @@ type Userinfo struct {
   Icon string `orm:"column(icon)"`
 }
 
+type Invitation struct {
+  Iid int `orm:"pk"`
+  Sender string `orm:"column(sender)"`
+  Receiver string `orm:"column(receiver)"`
+  Msg string `orm:"column(msg)"`
+}
+
 var Salt []byte
 
 func init() {
   Salt = []byte{0xc8, 0x28, 0xf2, 0x58, 0xa7, 0x6a, 0xad, 0x7b}
-  orm.RegisterModel(new(User), new(Userinfo))
+  orm.RegisterModel(new(User), new(Userinfo), new(Invitation))
 }
