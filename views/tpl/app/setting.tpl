@@ -45,13 +45,13 @@
 
         <div class="form-group">
           <div class="col-sm-12">
-            <button id="editbtn" type="button" class="widthbtn btn btn-info">Edit</button>
+            <button id="editbtn" type="button" class="widthbtn btn btn-primary">Edit</button>
           </div>
         </div>
         
         <div class="form-group">
           <div class="col-sm-12">
-            <button id="signoutbtn" type="button" class="widthbtn btn btn-info">Sign out</button>
+            <button id="signoutbtn" type="button" class="widthbtn btn btn-success">Sign out</button>
           </div>
         </div>
         <em id="hint"></em> 

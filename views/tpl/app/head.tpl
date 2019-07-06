@@ -20,7 +20,7 @@
     <![endif]-->
   
     <link rel="stylesheet" href="/static/css/basic.css">
-    <link rel="stylesheet" href="/static/css/setting.css">
+    <link rel="stylesheet" href="/static/css/app.css">
   </head>
 
   <body>
