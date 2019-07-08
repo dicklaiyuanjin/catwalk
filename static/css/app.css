@@ -18,3 +18,12 @@
 .padtop7px {
   padding-top: 7px;
 }
+
+#invite-envelope {
+  padding: 7px;
+  background-color: #fff;
+}
+
+.myarrow {
+  float: right;
+}

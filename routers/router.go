@@ -19,10 +19,14 @@ func init() {
 
   //App Router: handle app and app ajax
 	beego.Router("/app", &controllers.AppController{}, "get:App")
-  beego.Router("/app/signout", &controllers.AppController{}, "get:AppSignout")
-  beego.Router("/app/edit", &controllers.AppController{}, "post:AppEdit")
-  beego.Router("/app/upload", &controllers.AppController{}, "post:AppUpload")
+  beego.Router("/app/setting/signout", &controllers.AppController{}, "get:AppSettingSignout")
+  beego.Router("/app/setting/edit", &controllers.AppController{}, "post:AppSettingEdit")
+  beego.Router("/app/setting/upload", &controllers.AppController{}, "post:AppSettingUpload")
+  beego.Router("/app/invitation/agree", &controllers.AppController{}, "post:AppInvitationAgree")
+  beego.Router("/app/invitation/refuse", &controllers.AppController{}, "post:AppInvitationRefuse")
+  beego.Router("/app/invitation/send", &controllers.AppController{}, "post:AppInvitationSend")
 
 	//Webocket Router: handle websocket
-	beego.Router("/ws/join/user", &controllers.WsController{}, "get:JoinUser")
+	beego.Router("/ws/join", &controllers.WsController{}, "get:JoinUser")
+  beego.Router("/ws/ivtt/join", &controllers.WsController{}, "get:JoinIvttUser")
 }

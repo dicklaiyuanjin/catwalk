@@ -53,3 +53,10 @@ func AnalyzeUserInfoJson(userinfo *UserInfoJSON, resbody []byte) bool {
   return false
 }
 
+func AnalyzeInvitationJson(invitation *InvitationJSON, resbody []byte) bool {
+  if err := json.Unmarshal(resbody, invitation); err == nil {
+    return true
+  }
+  return false
+}
+

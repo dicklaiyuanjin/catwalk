@@ -81,7 +81,7 @@ function editbtn_click_handler() {
     setEditbtn(editbtn, 'Edit', 'widthbtn btn btn-info'); 
     var jsondata = getJsondata();
     if(sameAsBefore(jsondata) == false) {
-      ajax_request('/app/edit', 'POST', JSON.stringify(jsondata), function(xhr){
+      ajax_request('/app/setting/edit', 'POST', JSON.stringify(jsondata), function(xhr){
         var obj = JSON.parse(xhr.responseText);
         var hint = document.getElementById("hint");
         var errmsg = ""; 
@@ -127,7 +127,7 @@ function signout_su_func(xhr) {
 }
 
 function signoutbtn_click_handler() {
-  ajax_request('/app/signout','GET', null, signout_su_func);
+  ajax_request('/app/setting/signout','GET', null, signout_su_func);
 }
 
 var signoutbtn = document.getElementById("signoutbtn");
@@ -173,7 +173,7 @@ function upload_handler() {
       "icon": base64
     });
 
-    ajax_request('/app/upload', 'POST', jsondata, upload_su_func);
+    ajax_request('/app/setting/upload', 'POST', jsondata, upload_su_func);
   }
 }
 

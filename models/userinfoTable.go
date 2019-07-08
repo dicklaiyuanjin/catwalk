@@ -27,6 +27,21 @@ func InsertUserInfo(u *UserInfoJSON) bool {
   return false
 }
 
+func ReadUserInfoUsername(nickname string) string {
+  o := orm.NewOrm()
+  o.Using("default")
+
+  usr := Userinfo{Nickname: nickname}
+
+  err := o.Read(&usr, "Nickname")
+
+  if err == orm.ErrNoRows || err == orm.ErrMissPK {
+    return ""
+  } else {
+    return usr.Username
+  }
+}
+
 func ReadUserInfo(u *UserInfoJSON, key string) bool{
   o := orm.NewOrm()
   o.Using("default")
