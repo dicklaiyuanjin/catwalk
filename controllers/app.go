@@ -93,6 +93,8 @@ func (this *AppController) AppInvitationAgree() {
   resbody := this.Ctx.Input.RequestBody
   if models.AnalyzeInvitationJson(&invitation, resbody) == true {
     fmt.Println("agree!!!!!!!!!!!!!: ", invitation)
+    //同意之后，将信息放入好友列表
+    //除了将信息发送回发送方，还要发送成功信息给对方，这个需要依靠websocket实现
     b.State = 1
   }
   this.Data["json"] = b
@@ -105,27 +107,11 @@ func (this *AppController) AppInvitationRefuse() {
   resbody := this.Ctx.Input.RequestBody
   if models.AnalyzeInvitationJson(&invitation, resbody) == true {
     fmt.Println("refuse!!!!!!!!!!!!!!!:", invitation)
+    //拒绝之后，不需进行数据库操作，也不需要告诉对方
     b.State = 1
   }
   this.Data["json"] = b
   this.ServeJSON()
 }
 
-/*
-func (this *AppController) AppInvitationSend() {
-  b := models.SignErr{State: 0}
-  var invitation models.InvitationJSON
-  resbody := this.Ctx.Input.RequestBody
-  if models.AnalyzeInvitationJson(&invitation, resbody) == true {
-    if models.InsertInvitation(&invitation) == true {
-      //假设接收者在线，尝试发送给接收者
-
-      //设置成功与否的标志
-      b.State = 1
-    }
-  }
-  this.Data["json"] = b
-  this.ServeJSON()
-}
-*/
 

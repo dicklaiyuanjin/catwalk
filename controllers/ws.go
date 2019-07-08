@@ -15,7 +15,7 @@ var ivttHub *models.Hub
 
 func init() {
   ivttHub = models.NewHub(0)
-  ivttHub.Run()
+  go ivttHub.Run()
 }
 
 func (this *WsController) JoinIvttUser() {
@@ -40,11 +40,12 @@ func (this *WsController) JoinIvttUser() {
   }
 
   ivttHub.RegisterConn(&conninfo)
+  defer func(){
+    ivttHub.CloseConn(&conninfo)
+  }()
 
   go ivttHub.RecMsg(&conninfo)
-  go ivttHub.SendMsg(&conninfo)
-
-
+  ivttHub.SendMsg(&conninfo)
 }
 
 

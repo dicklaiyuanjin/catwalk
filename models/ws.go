@@ -2,6 +2,7 @@ package models
 
 import (
   "github.com/gorilla/websocket"
+  "fmt"
 )
 
 type ConnInfo struct {
@@ -46,14 +47,20 @@ func (hub *Hub) Run() {
   }
 }
 
+func (hub *Hub) CloseConn(conninfo *ConnInfo) {
+  if _, ok := hub.conns[conninfo.Username]; ok {
+    delete(hub.conns, conninfo.Username)
+    conninfo.Conn.Close()
+  }
+}
+
 func (hub *Hub) RegisterConn(conninfo *ConnInfo) {
-  hub.conns[conninfo.Username] = conninfo.Conn
+  hub.register <- conninfo
 }
 
 func (hub *Hub) RecMsg(conninfo *ConnInfo) {
   defer func(){
     hub.unregister <- conninfo
-    conninfo.Conn.Close()
   }()
 
   for {
@@ -62,12 +69,18 @@ func (hub *Hub) RecMsg(conninfo *ConnInfo) {
       return
     }
 
-    hub.broadcast <- msg
-  }
-}
+    switch t := hub.datatype; t {
+    case 0: //invitation
+      var ivtt InvitationJSON
+      if AnalyzeInvitationJson(&ivtt, msg) == true {
+        if InsertInvitation(&ivtt) == true {
+          hub.broadcast <- msg
+        }
+      }
+    }
 
-func (hub *Hub) insertIvttToDb (ivtt *InvitationJSON) {
-  InsertInvitation(ivtt)
+    //hub.broadcast <- msg
+  }
 }
 
 func (hub *Hub) SendMsg(conninfo *ConnInfo) {
@@ -78,7 +91,7 @@ func (hub *Hub) SendMsg(conninfo *ConnInfo) {
     case 0: //invitation
       var ivtt InvitationJSON
       if AnalyzeInvitationJson(&ivtt, msg) == true {
-        go hub.insertIvttToDb(&ivtt)
+        fmt.Println("ivtt!!!!!!!!!!!!!!!!!!!!!!!!!!: ", ivtt)
         rec := ReadUserInfoUsername(ivtt.Receiver)
         if rec != "" {
           if v, ok :=hub.conns[rec]; ok {

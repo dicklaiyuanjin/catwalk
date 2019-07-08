@@ -24,9 +24,7 @@ func init() {
   beego.Router("/app/setting/upload", &controllers.AppController{}, "post:AppSettingUpload")
   beego.Router("/app/invitation/agree", &controllers.AppController{}, "post:AppInvitationAgree")
   beego.Router("/app/invitation/refuse", &controllers.AppController{}, "post:AppInvitationRefuse")
-  beego.Router("/app/invitation/send", &controllers.AppController{}, "post:AppInvitationSend")
 
-	//Webocket Router: handle websocket
-	beego.Router("/ws/join", &controllers.WsController{}, "get:JoinUser")
+  //Webocket Router: handle websocket
   beego.Router("/ws/ivtt/join", &controllers.WsController{}, "get:JoinIvttUser")
 }

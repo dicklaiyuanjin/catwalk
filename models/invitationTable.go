@@ -16,9 +16,26 @@ func InsertInvitation(i *InvitationJSON) bool {
     Msg: i.Msg,
   }
 
-  _, err := o.Insert(&invite)
+  if IsInvitationExist(i.Sender, i.Receiver) == false && i.Sender != i.Receiver{
+    _, err := o.Insert(&invite)
+    if err == nil {
+      return true
+    }
+  }
+
+  return false
+}
+
+func IsInvitationExist(sdr string, rec string) bool {
+  o := orm.NewOrm()
+  o.Using("defalut")
+
+  var invites []Invitation
+  num, err := o.QueryTable("invitation").Filter("sender", sdr).Filter("receiver", rec).All(&invites)
   if err == nil {
-    return true
+    if num == 1 {
+      return true
+    }
   }
 
   return false
