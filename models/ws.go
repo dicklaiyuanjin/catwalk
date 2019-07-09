@@ -5,35 +5,23 @@ import (
   "fmt"
 )
 
-type ConnInfo struct {
-  Username string
-  Conn *websocket.Conn
-}
-
-
-/*
- * datatype determine the type of hub
- * 0: invitation data
- */
-type Hub struct {
+type IvttHub struct {
   conns map[string]*websocket.Conn
   register chan *ConnInfo
   unregister chan *ConnInfo
   broadcast chan []byte
-  datatype int
 }
 
-func NewHub(dt int) *Hub {
-  return &Hub{
+func NewIvttHub() *IvttHub {
+  return &IvttHub{
     conns: make(map[string]*websocket.Conn),
     register: make(chan *ConnInfo),
     unregister: make(chan *ConnInfo),
     broadcast: make(chan []byte),
-    datatype: dt,
   }
 }
 
-func (hub *Hub) Run() {
+func (hub *IvttHub) Run() {
   for {
     select {
       case conninfo := <-hub.register:
@@ -47,56 +35,47 @@ func (hub *Hub) Run() {
   }
 }
 
-func (hub *Hub) CloseConn(conninfo *ConnInfo) {
-  if _, ok := hub.conns[conninfo.Username]; ok {
-    delete(hub.conns, conninfo.Username)
-    conninfo.Conn.Close()
+func (hub *IvttHub) CloseConn(ci *ConnInfo) {
+  if _, ok := hub.conns[ci.Username]; ok {
+    delete(hub.conns, ci.Username)
+    ci.Conn.Close()
   }
 }
 
-func (hub *Hub) RegisterConn(conninfo *ConnInfo) {
-  hub.register <- conninfo
+func (hub *IvttHub) RegisterConn(ci *ConnInfo) {
+  hub.register <- ci
 }
 
-func (hub *Hub) RecMsg(conninfo *ConnInfo) {
+func (hub *IvttHub) RecMsg(ci *ConnInfo) {
   defer func(){
-    hub.unregister <- conninfo
+    hub.unregister <- ci
   }()
 
   for {
-    _, msg, err := conninfo.Conn.ReadMessage()
+    _, msg, err := ci.Conn.ReadMessage()
     if err != nil {
       return
     }
 
-    switch t := hub.datatype; t {
-    case 0: //invitation
-      var ivtt InvitationJSON
-      if AnalyzeInvitationJson(&ivtt, msg) == true {
-        if InsertInvitation(&ivtt) == true {
-          hub.broadcast <- msg
-        }
+    var ivtt InvitationJSON
+    if AnalyzeInvitationJson(&ivtt, msg) == true {
+      if InsertInvitation(&ivtt) == true {
+        hub.broadcast <- msg
       }
     }
-
-    //hub.broadcast <- msg
   }
 }
 
-func (hub *Hub) SendMsg(conninfo *ConnInfo) {
+func (hub *IvttHub) SendMsg(ci *ConnInfo) {
   for {
     msg := <-hub.broadcast
-
-    switch t := hub.datatype; t {
-    case 0: //invitation
-      var ivtt InvitationJSON
-      if AnalyzeInvitationJson(&ivtt, msg) == true {
-        fmt.Println("ivtt!!!!!!!!!!!!!!!!!!!!!!!!!!: ", ivtt)
-        rec := ReadUserInfoUsername(ivtt.Receiver)
-        if rec != "" {
-          if v, ok :=hub.conns[rec]; ok {
-            v.WriteMessage(1, msg)
-          }
+    var ivtt InvitationJSON
+    if AnalyzeInvitationJson(&ivtt, msg) == true {
+      fmt.Println("ivtt!!!!!!!!!!!!!!!!!!!!!!!!!!: ", ivtt)
+      rec := ReadUserInfoUsername(ivtt.Receiver)
+      if rec != "" {
+        if v, ok :=hub.conns[rec]; ok {
+          v.WriteMessage(1, msg)
         }
       }
     }

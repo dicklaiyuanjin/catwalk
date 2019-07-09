@@ -11,10 +11,10 @@ type WsController struct {
 	beego.Controller
 }
 
-var ivttHub *models.Hub
+var ivttHub *models.IvttHub
 
 func init() {
-  ivttHub = models.NewHub(0)
+  ivttHub = models.NewIvttHub()
   go ivttHub.Run()
 }
 
