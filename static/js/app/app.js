@@ -7,7 +7,7 @@ $(document).ready(function(){
       if (event.data != "") {
         var data = JSON.parse(event.data);
         console.log("data: ", data);
-        if (data.sender != $('#nickname').val()) {
+        if (data.sender != $('#username').val()) {
           if (!isSenderExist(data.sender)) {
             $("#rec-envelope").append(newEnvelope(data));
             recEnvelope(data.sender);
@@ -19,7 +19,7 @@ $(document).ready(function(){
     
     $("#invite-send").click(function(){
       var data = JSON.stringify({
-        sender: $('#nickname').val(),
+        sender: $('#username').val(),
         receiver: $('#receiver-name').val(),
         msg: $('#invite-message').val()
       });

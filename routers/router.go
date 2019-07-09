@@ -27,4 +27,5 @@ func init() {
 
   //Webocket Router: handle websocket
   beego.Router("/ws/ivtt/join", &controllers.WsController{}, "get:JoinIvttUser")
+  beego.Router("/ws/ivtt/reply", &controllers.WsController{}, "get:ReplyIvttUser")
 }

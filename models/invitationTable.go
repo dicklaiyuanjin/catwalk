@@ -3,9 +3,8 @@ package models
 import (
   "github.com/astaxie/beego/orm"
 )
-//here, sender and receiver are nickname
 
-
+//here, sender and receiver should be username
 func InsertInvitation(i *InvitationJSON) bool {
   o := orm.NewOrm()
   o.Using("default")
@@ -60,7 +59,6 @@ func ReadInvitation(result *[]InvitationJSON, name string, key string) bool {
   }
 
   return false
-
 }
 
 func ReadInvitationId(name string, key string) (int, bool) {

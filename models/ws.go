@@ -5,6 +5,11 @@ import (
   "fmt"
 )
 
+
+/******************************************************
+* invitation send part
+******************************************************/
+
 type IvttHub struct {
   conns map[string]*websocket.Conn
   register chan *ConnInfo
@@ -59,8 +64,11 @@ func (hub *IvttHub) RecMsg(ci *ConnInfo) {
 
     var ivtt InvitationJSON
     if AnalyzeInvitationJson(&ivtt, msg) == true {
-      if InsertInvitation(&ivtt) == true {
-        hub.broadcast <- msg
+      fmt.Println("ivtt!!!!!!!!!!!!!!!!!!!!!!!!: ", ivtt)
+      if ExistUsername(ivtt.Sender) && ExistUsername(ivtt.Receiver) {
+        if InsertInvitation(&ivtt) == true {
+          hub.broadcast <- msg
+        }
       }
     }
   }
@@ -71,13 +79,13 @@ func (hub *IvttHub) SendMsg(ci *ConnInfo) {
     msg := <-hub.broadcast
     var ivtt InvitationJSON
     if AnalyzeInvitationJson(&ivtt, msg) == true {
-      fmt.Println("ivtt!!!!!!!!!!!!!!!!!!!!!!!!!!: ", ivtt)
-      rec := ReadUserInfoUsername(ivtt.Receiver)
-      if rec != "" {
-        if v, ok :=hub.conns[rec]; ok {
-          v.WriteMessage(1, msg)
-        }
+      if v, ok :=hub.conns[ivtt.Receiver]; ok {
+        v.WriteMessage(1, msg)
       }
     }
   }
 }
+
+/**************************************************
+* invitation reply part
+**************************************************/

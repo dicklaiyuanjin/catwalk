@@ -30,7 +30,7 @@ func (this *AppController) App() {
   //invitation part
   //作为reciver，获得所有sender发送给自己的invitation
   var inviArr []models.InvitationJSON
-  if models.ReadInvitation(&inviArr, userinfo.Nickname, "Receiver") == true {
+  if models.ReadInvitation(&inviArr, userinfo.Username, "Receiver") == true {
     fmt.Println(inviArr)
     this.Data["Invitations"] = inviArr
   }

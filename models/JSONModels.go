@@ -32,10 +32,16 @@ type UserInfoJSON struct {
   Icon string `json"icon"`
 }
 
+//Sender and Receiver should be username
 type InvitationJSON struct {
   Sender string `json:"sender"`
   Receiver string `json:"receiver"`
   Msg string `json:"msg"`
+}
+
+type FriendListJSON struct {
+  Username string `json:"username"`
+  Friusername string `json:"friusername"`
 }
 
 
@@ -60,3 +66,9 @@ func AnalyzeInvitationJson(invitation *InvitationJSON, resbody []byte) bool {
   return false
 }
 
+func AnalyzeFriendListJson(f *FriendListJSON, resbody []byte) bool {
+  if err := json.Unmarshal(resbody, f); err == nil {
+    return true
+  }
+  return false
+}

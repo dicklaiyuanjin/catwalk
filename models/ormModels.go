@@ -19,6 +19,7 @@ type Userinfo struct {
   Icon string `orm:"column(icon)"`
 }
 
+//Sender and Receiver should be username
 type Invitation struct {
   Iid int `orm:"pk"`
   Sender string `orm:"column(sender)"`
@@ -26,9 +27,15 @@ type Invitation struct {
   Msg string `orm:"column(msg)"`
 }
 
+type Friendlist struct {
+  Fid int `orm:"pk"`
+  Username string `orm:"column(username)"`
+  Friusername string `orm:"column(friusername)"`
+}
+
 var Salt []byte
 
 func init() {
   Salt = []byte{0xc8, 0x28, 0xf2, 0x58, 0xa7, 0x6a, 0xad, 0x7b}
-  orm.RegisterModel(new(User), new(Userinfo), new(Invitation))
+  orm.RegisterModel(new(User), new(Userinfo), new(Invitation), new(Friendlist))
 }

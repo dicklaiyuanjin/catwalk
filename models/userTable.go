@@ -11,7 +11,7 @@ func ExistUsername(username string) bool {
   o.Using("default")
 
   user := User{Username: username}
-  err := o.Read(&user)
+  err := o.Read(&user, "Username")
 
   if err == orm.ErrNoRows || err == orm.ErrMissPK {
     return false

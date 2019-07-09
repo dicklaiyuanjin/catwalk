@@ -48,4 +48,6 @@ func (this *WsController) JoinIvttUser() {
   ivttHub.SendMsg(&conninfo)
 }
 
-
+func (this *WsController) ReplyIvttUser() {
+  for{}
+}
