@@ -79,7 +79,7 @@ func DeleteFriendList(f *FriendListJSON) bool {
   fid, ok := ReadFriListId(f)
 
   if ok {
-    if _, err := o.Delete(&Friendlist{Fid: id}); err == nil {
+    if _, err := o.Delete(&Friendlist{Fid: fid}); err == nil {
       return true
     }
   }

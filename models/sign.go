@@ -11,7 +11,7 @@ func AuthSignupHelper(b *SignErr, resbody []byte, idkey string) string {
     return ""
   }
 
-  if VerifyCaptcha(idkey, user.Captchainput) == false {
+  if CwCaptcha.Verify(idkey, user.Captchainput) == false {
     return ""
   }
 

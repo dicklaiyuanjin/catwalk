@@ -3,9 +3,14 @@ package models
 import (
   "github.com/mojocn/base64Captcha"
 )
+type CaptchaModel struct {
+  Name string
+}
 
-func CaptchaCreate() (string, string){
-  var config = base64Captcha.ConfigCharacter{
+var CwCaptcha *CaptchaModel
+
+func (c *CaptchaModel) Create() (string, string) {
+  var config = base64Captcha.ConfigCharacter {
     Height:             60,
     Width:              240,
     Mode:               base64Captcha.CaptchaModeNumber,
@@ -24,7 +29,7 @@ func CaptchaCreate() (string, string){
   return idKey, base64string
 }
 
-func VerifyCaptcha(idkey, verifyValue string) bool {
+func (c *CaptchaModel) Verify(idkey, verifyValue string) bool {
   return base64Captcha.VerifyCaptcha(idkey, verifyValue)
 }
 
