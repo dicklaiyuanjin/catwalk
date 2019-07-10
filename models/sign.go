@@ -1,9 +1,9 @@
 package models
 
-func AuthSignupHelper(b *SignErr, resbody []byte, idkey string) string {
-  var user UserJSON
-  var userinfo UserInfoJSON
-  if AnalyzeUserJson(&user, resbody) == false {
+func AuthSignupHelper(b *JsSign, resbody []byte, idkey string) string {
+  var user *JsUser
+  var userinfo JsUif
+  if CwJSON.Unmarshal(resbody, user) == false {
     return ""
   }
 
@@ -15,7 +15,7 @@ func AuthSignupHelper(b *SignErr, resbody []byte, idkey string) string {
     return ""
   }
 
-  if InsertUser(&user) == false {
+  if InsertUser(user) == false {
     return ""
   }
 

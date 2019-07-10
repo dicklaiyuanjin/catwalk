@@ -5,7 +5,7 @@ import (
 )
 
 //here, sender and receiver should be username
-func InsertInvitation(i *InvitationJSON) bool {
+func InsertInvitation(i *JsIvtt) bool {
   o := orm.NewOrm()
   o.Using("default")
 
@@ -40,7 +40,7 @@ func IsInvitationExist(sdr string, rec string) bool {
   return false
 }
 
-func ReadInvitation(result *[]InvitationJSON, name string, key string) bool {
+func ReadInvitation(result *[]JsIvtt, name string, key string) bool {
   o := orm.NewOrm()
   o.Using("default")
 
@@ -49,7 +49,7 @@ func ReadInvitation(result *[]InvitationJSON, name string, key string) bool {
   _, err := o.QueryTable("invitation").Filter(key, name).All(&invites)
   if err == nil {
     for _, v := range invites {
-      var item InvitationJSON
+      var item JsIvtt
       item.Sender = v.Sender
       item.Receiver = v.Receiver
       item.Msg = v.Msg

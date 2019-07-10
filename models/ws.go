@@ -62,8 +62,8 @@ func (hub *IvttHub) RecMsg(ci *ConnInfo) {
       return
     }
 
-    var ivtt InvitationJSON
-    if AnalyzeInvitationJson(&ivtt, msg) == true {
+    var ivtt JsIvtt
+    if CwJSON.Unmarshal(msg, &ivtt) == true {
       fmt.Println("ivtt!!!!!!!!!!!!!!!!!!!!!!!!: ", ivtt)
       if ExistUsername(ivtt.Sender) && ExistUsername(ivtt.Receiver) {
         if InsertInvitation(&ivtt) == true {
@@ -77,8 +77,8 @@ func (hub *IvttHub) RecMsg(ci *ConnInfo) {
 func (hub *IvttHub) SendMsg(ci *ConnInfo) {
   for {
     msg := <-hub.broadcast
-    var ivtt InvitationJSON
-    if AnalyzeInvitationJson(&ivtt, msg) == true {
+    var ivtt JsIvtt
+    if CwJSON.Unmarshal(msg, &ivtt) == true {
       if v, ok :=hub.conns[ivtt.Receiver]; ok {
         v.WriteMessage(1, msg)
       }

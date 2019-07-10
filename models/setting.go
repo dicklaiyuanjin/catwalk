@@ -1,7 +1,7 @@
 package models
 
 
-func EditExistHelper(userinfo *UserInfoJSON, errmsg *UserinfoErr) {
+func EditExistHelper(userinfo *JsUif, errmsg *JsUifSign) {
   if ExistNickname(userinfo.Nickname) == true {
     errmsg.Existnick = 1
   } else {
@@ -16,8 +16,8 @@ func EditExistHelper(userinfo *UserInfoJSON, errmsg *UserinfoErr) {
 
 }
 
-func EditHelper(userinfo *UserInfoJSON, resbody []byte, errmsg *UserinfoErr) bool {
-  if AnalyzeUserInfoJson(userinfo, resbody) == false {
+func EditHelper(userinfo *JsUif, resbody []byte, errmsg *JsUifSign) bool {
+  if CwJSON.Unmarshal(resbody, userinfo) == false {
     return false
   }
 

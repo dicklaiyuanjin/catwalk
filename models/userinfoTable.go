@@ -4,7 +4,7 @@ import (
   "github.com/astaxie/beego/orm"
 )
 
-func InsertUserInfo(u *UserInfoJSON) bool {
+func InsertUserInfo(u *JsUif) bool {
   if ExistUsername(u.Username) {
     return false
   }
@@ -42,7 +42,7 @@ func ReadUserInfoUsername(nickname string) string {
   }
 }
 
-func ReadUserInfo(u *UserInfoJSON, key string) bool{
+func ReadUserInfo(u *JsUif, key string) bool{
   o := orm.NewOrm()
   o.Using("default")
 
@@ -68,7 +68,7 @@ func ReadUserInfo(u *UserInfoJSON, key string) bool{
   }
 }
 
-func UpdateUserInfo(u *UserInfoJSON) bool {
+func UpdateUserInfo(u *JsUif) bool {
   o := orm.NewOrm()
   o.Using("default")
 
@@ -89,7 +89,7 @@ func UpdateUserInfo(u *UserInfoJSON) bool {
   return false
 }
 
-func UpdateIconOfUserInfo(u *UserInfoJSON) bool {
+func UpdateIconOfUserInfo(u *JsUif) bool {
   o := orm.NewOrm()
   o.Using("default")
 

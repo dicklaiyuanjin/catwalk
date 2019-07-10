@@ -20,7 +20,7 @@ func ExistUsername(username string) bool {
   }
 }
 
-func InsertUser(u *UserJSON) bool {
+func InsertUser(u *JsUser) bool {
   if ExistUsername(u.Username) {
     return false
   }
@@ -63,7 +63,7 @@ func byteSliceEqual(a, b []byte) bool {
 }
 
 
-func VerifyUser(u *UserJSON) bool {
+func VerifyUser(u *JsUser) bool {
   o := orm.NewOrm()
   o.Using("default")
 

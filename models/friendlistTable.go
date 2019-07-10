@@ -4,7 +4,7 @@ import (
   "github.com/astaxie/beego/orm"
 )
 
-func IsFriListExist(f *FriendListJSON) bool {
+func IsFriListExist(f *JsFl) bool {
   o := orm.NewOrm()
   o.Using("default")
 
@@ -18,7 +18,7 @@ func IsFriListExist(f *FriendListJSON) bool {
   return false
 }
 
-func InsertFriendList(f *FriendListJSON) bool{
+func InsertFriendList(f *JsFl) bool{
   o := orm.NewOrm()
   o.Using("default")
 
@@ -37,7 +37,7 @@ func InsertFriendList(f *FriendListJSON) bool{
   return false
 }
 
-func ReadFriendList(f *[]FriendListJSON, username string) bool {
+func ReadFriendList(f *[]JsFl, username string) bool {
   o := orm.NewOrm()
   o.Using("default")
 
@@ -46,7 +46,7 @@ func ReadFriendList(f *[]FriendListJSON, username string) bool {
   _, err := o.QueryTable("friendlist").Filter("username", username).All(&fris)
   if err == nil {
     for _, v := range fris {
-      var item FriendListJSON
+      var item JsFl
       item.Username = v.Username
       item.Friusername = v.Friusername
       *f = append(*f, item)
@@ -57,7 +57,7 @@ func ReadFriendList(f *[]FriendListJSON, username string) bool {
   return false
 }
 
-func ReadFriListId(f *FriendListJSON) (int, bool) {
+func ReadFriListId(f *JsFl) (int, bool) {
   o := orm.NewOrm()
   o.Using("default")
 
@@ -72,7 +72,7 @@ func ReadFriListId(f *FriendListJSON) (int, bool) {
   return -1, false
 }
 
-func DeleteFriendList(f *FriendListJSON) bool {
+func DeleteFriendList(f *JsFl) bool {
   o := orm.NewOrm()
   o.Using("default")
 

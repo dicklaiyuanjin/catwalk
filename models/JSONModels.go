@@ -4,27 +4,55 @@ import (
   "encoding/json"
 )
 
-type UserJSON struct {
+type CwJSONModel struct {
+  name string
+}
+
+var CwJSON *CwJSONModel
+
+func (cj *CwJSONModel) Unmarshal(resbody []byte, v interface{}) bool {
+  if err := json.Unmarshal(resbody, v); err == nil {
+    return true
+  }
+  return false
+}
+
+/************************************
+ * JsSign
+ * state=0: info error
+ * state=1: pass
+ ************************************/
+type JsSign struct {
+  State int `json:"state"`
+}
+
+
+/*********************************
+ * JsUifSign(Uif: userinfo)
+ * value=1 : exist
+ * value=0 : not exist
+ ********************************/
+type JsUifSign struct {
+  Existnick int `json:"existnick"`
+  Existemail int `json:"existemail"`
+}
+
+
+
+/*******************************
+ * JsUser
+ ******************************/
+type JsUser struct {
   Username string `json:"username"`
   Password string `json:"password"`
   Captchainput string `json:"captchainput"`
 }
 
-/*
- * state=0: info error
- * state=1: pass
- */
-type SignErr struct {
-  State int `json:"state"`
-}
 
-
-type UserinfoErr struct {
-  Existnick int `json:"existnick"`
-  Existemail int `json:"existemail"`
-}
-
-type UserInfoJSON struct {
+/*************************************
+ * JsUif(Uif: userinfo)
+ ************************************/
+type JsUif struct {
   Username string `json:"username"`
   Nickname string `json:"nickname"`
   Email string `json:"email"`
@@ -32,43 +60,27 @@ type UserInfoJSON struct {
   Icon string `json"icon"`
 }
 
+
+
+
+/********************************************
+ * JsIvtt
+ *******************************************/
 //Sender and Receiver should be username
-type InvitationJSON struct {
+type JsIvtt struct {
   Sender string `json:"sender"`
   Receiver string `json:"receiver"`
   Msg string `json:"msg"`
 }
 
-type FriendListJSON struct {
+
+
+/********************************************
+ * JsFl
+ *******************************************/
+type JsFl struct {
   Username string `json:"username"`
   Friusername string `json:"friusername"`
 }
 
 
-func AnalyzeUserJson(user *UserJSON, resbody []byte) bool {
-  if err := json.Unmarshal(resbody, user); err == nil {
-    return true
-  }
-  return false
-}
-
-func AnalyzeUserInfoJson(userinfo *UserInfoJSON, resbody []byte) bool {
-  if err := json.Unmarshal(resbody, userinfo); err == nil {
-    return true
-  }
-  return false
-}
-
-func AnalyzeInvitationJson(invitation *InvitationJSON, resbody []byte) bool {
-  if err := json.Unmarshal(resbody, invitation); err == nil {
-    return true
-  }
-  return false
-}
-
-func AnalyzeFriendListJson(f *FriendListJSON, resbody []byte) bool {
-  if err := json.Unmarshal(resbody, f); err == nil {
-    return true
-  }
-  return false
-}
