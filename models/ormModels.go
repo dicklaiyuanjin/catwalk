@@ -2,6 +2,7 @@ package models
 
 import (
   "github.com/astaxie/beego/orm"
+  _ "github.com/go-sql-driver/mysql"
 )
 
 type User struct {
@@ -37,5 +38,8 @@ var Salt []byte
 
 func init() {
   Salt = []byte{0xc8, 0x28, 0xf2, 0x58, 0xa7, 0x6a, 0xad, 0x7b}
+  orm.RegisterDriver("mysql", orm.DRMySQL)
+  orm.RegisterDataBase("default", "mysql", "dick:12345678@/catwalk?charset=utf8")
+  orm.Debug = true
   orm.RegisterModel(new(User), new(Userinfo), new(Invitation), new(Friendlist))
 }
