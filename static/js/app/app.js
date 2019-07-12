@@ -1,28 +1,23 @@
 $(document).ready(function(){
   function ivttWebsocket() {
-    const socket = new WebSocket('ws://' + window.location.host + '/ws/ivtt/join?username=' + $('#username').val());
+    const socket = new WebSocket('ws://' + window.location.host + '/ws/join?username=' + $('#username').val());
     
     socket.onmessage = function (event) {
-      console.log("event.data: ", event.data);
       if (event.data != "") {
         var data = JSON.parse(event.data);
         console.log("data: ", data);
-        if (data.sender != $('#username').val()) {
-          if (!isSenderExist(data.sender)) {
-            $("#rec-envelope").append(newEnvelope(data));
-            recEnvelope(data.sender);
-          }
-        }
+        RecData(data);
       }
     }
     
     
     $("#invite-send").click(function(){
-      var data = JSON.stringify({
+      var data = SendData({
         sender: $('#username').val(),
         receiver: $('#receiver-name').val(),
         msg: $('#invite-message').val()
-      });
+      }, 0);
+
       $('#receiver-name').val("");
       $('#invite-message').val(""); 
       socket.send(data);
@@ -31,7 +26,56 @@ $(document).ready(function(){
        
   }
  
+  /*
+   * t is data type
+   * 0: invitation
+   * 1: reply
+   */
+  function SendData(data, t) {
+    var ws = {
+      code: t,
+      ivtt: {
+        sender: "",
+        receiver: "",
+        msg: ""
+      },
+      rpl: {
+        content: ""
+      }
+    };
 
+    switch (t) {
+    case 0:
+      ws.ivtt = data
+      break;
+    case 1:
+      ws.rpl = data
+      break;
+    }
+    return JSON.stringify(ws);
+  }
+
+  function RecData(data) {
+    switch (data.code) {
+    case 0:
+      rec_ivtt(data.ivtt);
+    case 1:
+      rec_rpl(data.rpl);
+    }
+  }
+
+  function rec_ivtt(data) {
+    if (data.sender != $('#username').val()) {
+      if (!isSenderExist(data.sender)) {
+        $("#rec-envelope").append(newEnvelope(data));
+        recEnvelope(data.sender);
+      }
+    }
+  }
+
+  function rec_rpl(data){
+  
+  }
 
   /**********************************
   * invitation part

@@ -17,6 +17,19 @@ func (cj *CwJSONModel) Unmarshal(resbody []byte, v interface{}) bool {
   return false
 }
 
+/*********************************************************
+ * the websocket data between back-end and front-end
+ * code represent the type
+ * 0: Ivtt
+ * 1: Rpl
+ ********************************************************/
+type WsData struct {
+  Code int `json:code`
+  Ivtt JsIvtt `json:"ivtt"`
+  Rpl JsRpl `json:"rpl"`
+}
+
+
 /************************************
  * JsSign
  * state=0: info error
@@ -64,7 +77,7 @@ type JsUif struct {
 
 
 /********************************************
- * JsIvtt
+ * JsIvtt(Ivtt:invitation)
  *******************************************/
 //Sender and Receiver should be username
 type JsIvtt struct {
@@ -73,10 +86,16 @@ type JsIvtt struct {
   Msg string `json:"msg"`
 }
 
+/********************************************
+ * JsRpl(Rpl:reply)
+ *******************************************/
+type JsRpl struct {
+  Content string `json:"content"`
+}
 
 
 /********************************************
- * JsFl
+ * JsFl(Fl:friendlist)
  *******************************************/
 type JsFl struct {
   Username string `json:"username"`

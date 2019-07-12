@@ -18,14 +18,13 @@ type ConnInfo struct {
   Conn *websocket.Conn
 }
 
-/******************************************************
-* invitation send part
-******************************************************/
 type HubModel struct {
   conns map[string]*websocket.Conn
   register chan *ConnInfo
   unregister chan *ConnInfo
   broadcast chan []byte
+
+  Data *DataModel
 }
 
 func NewHub() *HubModel {
@@ -72,32 +71,63 @@ func (hub *HubModel) RecMsg(ci *ConnInfo) {
     if err != nil {
       return
     }
-
-    var ivtt JsIvtt
-    if CwJSON.Unmarshal(msg, &ivtt) == true {
-      fmt.Println("rec ivtt!!!!!!!!!!!!!!!!!!!!!!!!: ", ivtt)
-      if Crud.User.Exist(ivtt.Sender) && Crud.User.Exist(ivtt.Receiver) {
-        if Crud.Invitation.Insert(&ivtt) == true {
-          hub.broadcast <- msg
-        }
-      }
-    }
+    hub.broadcast <- msg
   }
 }
 
 func (hub *HubModel) SendMsg(ci *ConnInfo) {
   for {
     msg := <-hub.broadcast
-    var ivtt JsIvtt
-    if CwJSON.Unmarshal(msg, &ivtt) == true {
-      fmt.Println("send msg!!!!!!!!!!!!!!!!!!!!!!!!: ", ivtt)
-      if v, ok := hub.conns[ivtt.Receiver]; ok {
-        v.WriteMessage(1, msg)
-      }
-    }
+    username, ok := hub.Data.Handler(msg)
+    if !ok { return }
+    v, ok := hub.Exist(username)
+    if !ok { return }
+    v.WriteMessage(1, msg)
   }
 }
 
-/**************************************************
-* invitation reply part
-**************************************************/
+func (hub *HubModel) Exist(username string) (*websocket.Conn, bool) {
+  v, ok := hub.conns[username]
+  return v, ok
+}
+
+
+/*********************************************************
+ * data handler
+ ********************************************************/
+
+type DataModel struct {
+  name string
+}
+
+/* 
+ * data handler
+ * get the selected data
+ * return target, ok
+ */
+func (d *DataModel) Handler(msg []byte) (string, bool) {
+  var ws WsData
+  ok := CwJSON.Unmarshal(msg, &ws)
+  fmt.Println("wsData!!!!!!!!!!!!!!!!!!!!!:", ws)
+  if !ok { return "", false }
+
+  switch ws.Code {
+  case 0:
+    return d.Ivtt(&ws.Ivtt)
+  case 1:
+  }
+
+  return "", false
+}
+
+func (d *DataModel) Ivtt(i *JsIvtt) (string, bool) {
+  ok := Crud.User.Exist(i.Sender) && Crud.User.Exist(i.Receiver)
+  if !ok { return "", false }
+
+  ok = Crud.Invitation.Insert(i)
+  if !ok { return "", false }
+
+  return i.Receiver, true
+}
+
+

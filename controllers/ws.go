@@ -11,7 +11,7 @@ type WsController struct {
 	beego.Controller
 }
 
-func (this *WsController) JoinIvttUser() {
+func (this *WsController) JoinUser() {
   username := this.GetString("username")
   if len(username) == 0 {
     this.Redirect("/", 302)
@@ -39,8 +39,4 @@ func (this *WsController) JoinIvttUser() {
 
   go models.Hub.RecMsg(&conninfo)
   models.Hub.SendMsg(&conninfo)
-}
-
-func (this *WsController) ReplyIvttUser() {
-  for{}
 }
