@@ -24,10 +24,10 @@ func (this *AuthController) AuthSignin() {
   ok := models.CwJSON.Unmarshal(this.Ctx.Input.RequestBody, &user)
   fmt.Println("user!!!!!!!!!!!!!!!!!!!!!!!!!!: ", user)
   if ok {
-    if models.VerifyUser(&user) == true &&
+    if models.Crud.User.Verify(&user) == true &&
         models.CwCaptcha.Verify(this.GetSession("idkey").(string), user.Captchainput) {
       this.SetSession("username", user.Username)
-      models.SetUserActive(user.Username)
+      models.Crud.User.SetActive(user.Username)
       b = models.JsSign{State: 1}
     }
   }

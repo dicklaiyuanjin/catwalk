@@ -65,8 +65,8 @@ func (hub *IvttHub) RecMsg(ci *ConnInfo) {
     var ivtt JsIvtt
     if CwJSON.Unmarshal(msg, &ivtt) == true {
       fmt.Println("ivtt!!!!!!!!!!!!!!!!!!!!!!!!: ", ivtt)
-      if ExistUsername(ivtt.Sender) && ExistUsername(ivtt.Receiver) {
-        if InsertInvitation(&ivtt) == true {
+      if Crud.User.Exist(ivtt.Sender) && Crud.User.Exist(ivtt.Receiver) {
+        if Crud.Invitation.Insert(&ivtt) == true {
           hub.broadcast <- msg
         }
       }

@@ -7,7 +7,7 @@ func AuthSignupHelper(b *JsSign, resbody []byte, idkey string) string {
     return ""
   }
 
-  if ExistUsername(user.Username) == true {
+  if Crud.User.Exist(user.Username) == true {
     return ""
   }
 
@@ -15,7 +15,7 @@ func AuthSignupHelper(b *JsSign, resbody []byte, idkey string) string {
     return ""
   }
 
-  if InsertUser(user) == false {
+  if Crud.User.Insert(user) == false {
     return ""
   }
 
@@ -26,7 +26,7 @@ func AuthSignupHelper(b *JsSign, resbody []byte, idkey string) string {
   }
 
 
-  SetUserActive(user.Username)
+  Crud.User.SetActive(user.Username)
   b.State = 1
   return user.Username
 }

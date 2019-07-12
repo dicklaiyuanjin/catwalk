@@ -5,7 +5,7 @@ import (
 )
 
 func InsertUserInfo(u *JsUif) bool {
-  if ExistUsername(u.Username) {
+  if Crud.User.Exist(u.Username) {
     return false
   }
 

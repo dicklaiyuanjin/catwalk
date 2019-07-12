@@ -31,7 +31,8 @@ func (this *AppController) App() {
   //invitation part
   //作为reciver，获得所有sender发送给自己的invitation
   var inviArr []models.JsIvtt
-  if models.ReadInvitation(&inviArr, userinfo.Username, "Receiver") == true {
+  ok := models.Crud.Invitation.ReadList(inviArr, userinfo.Username, "Receiver")
+  if ok {
     this.Data["Invitations"] = inviArr
   }
 
@@ -49,7 +50,7 @@ func (this *AppController) AppSettingSignout() {
   u := this.GetSession("username")
   this.DelSession("username")
   b := models.JsSign{State: 0}
-  if models.SetUserUnActive(u.(string)) == true {
+  if models.Crud.User.SetUnActive(u.(string)) == true {
     b.State = 1
   }
   this.Data["json"] = b
