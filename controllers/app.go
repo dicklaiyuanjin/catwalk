@@ -65,7 +65,7 @@ func (this *AppController) AppSettingEdit() {
   }
   var userinfo models.JsUif
   resbody := this.Ctx.Input.RequestBody
-  models.EditHelper(&userinfo, resbody, &b)
+  models.App.Setting.Edit(&userinfo, resbody, &b)
   this.Data["json"] = b
   this.ServeJSON()
 }
