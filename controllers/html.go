@@ -41,7 +41,7 @@ func (this *HtmlController) NotFound() {
 
 
 func captchaHelper(this *HtmlController) {
-  idkey, captcha := models.CwCaptcha.Create()
+  idkey, captcha := models.App.Captcha.Create()
   this.SetSession("idkey", idkey)
   this.Data["captcha"] = template.URL(captcha)
 }

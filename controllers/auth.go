@@ -12,7 +12,7 @@ type AuthController struct {
 }
 
 func (this *AuthController) AuthCaptcha() {
-  idkey, captcha := models.CwCaptcha.Create()
+  idkey, captcha := models.App.Captcha.Create()
   this.SetSession("idkey", idkey)
   this.Data["json"] = template.URL(captcha)
   this.ServeJSON()
@@ -25,7 +25,7 @@ func (this *AuthController) AuthSignin() {
   fmt.Println("user!!!!!!!!!!!!!!!!!!!!!!!!!!: ", user)
   if ok {
     if models.Crud.User.Verify(&user) == true &&
-        models.CwCaptcha.Verify(this.GetSession("idkey").(string), user.Captchainput) {
+        models.App.Captcha.Verify(this.GetSession("idkey").(string), user.Captchainput) {
       this.SetSession("username", user.Username)
       models.Crud.User.SetActive(user.Username)
       b = models.JsSign{State: 1}
