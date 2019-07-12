@@ -41,7 +41,7 @@ func (this *AuthController) AuthSignup() {
   b := models.JsSign{State: 0}
   resbody := this.Ctx.Input.RequestBody
   idkey := this.GetSession("idkey").(string)
-  username := models.AuthSignupHelper(&b, resbody, idkey)
+  username := models.App.Sign.Up(&b, resbody, idkey)
   if b.State == 1 {
     this.SetSession("username", username)
   }

@@ -2,13 +2,13 @@ package models
 
 
 func EditExistHelper(userinfo *JsUif, errmsg *JsUifSign) {
-  if Crud.Uif.ExistNickname(userinfo.Nickname) == true {
+  if Crud.Uif.Exist(userinfo.Nickname, "Nickname") == true {
     errmsg.Existnick = 1
   } else {
     errmsg.Existnick = 0
   }
 
-  if Crud.Uif.ExistEmail(userinfo.Email) == true {
+  if Crud.Uif.Exist(userinfo.Email, "Email") == true {
     errmsg.Existemail = 1
   } else {
     errmsg.Existemail = 0

@@ -363,7 +363,7 @@ type userinfoTbl struct {
 }
 
 func (uif *userinfoTbl) Insert(u *JsUif) bool {
-  if Crud.User.Exist(u.Username) {
+  if uif.Exist(u.Username, "Username") {
     return false
   }
 
@@ -448,28 +448,21 @@ func (uif *userinfoTbl) UpdateIcon(u *JsUif) bool {
   return false
 }
 
-func (uif *userinfoTbl) ExistNickname(nickname string) bool {
+func (uif *userinfoTbl) Exist(content string, key string) bool {
   o := orm.NewOrm()
   o.Using("default")
 
-  usr := Userinfo{Nickname: nickname}
-
-  err := o.Read(&usr, "Nickname")
-
-  if err == orm.ErrNoRows || err == orm.ErrMissPK {
-    return false
-  } else {
-    return true
+  var usr Userinfo
+  switch key {
+  case "Username":
+    usr.Username = content
+  case "Nickname":
+    usr.Nickname = content
+  case "Email":
+    usr.Email = content
   }
-}
 
-func (uif *userinfoTbl) ExistEmail(email string) bool {
-  o := orm.NewOrm()
-  o.Using("default")
-
-  usr := Userinfo{Email: email}
-
-  err := o.Read(&usr, "Email")
+  err := o.Read(&usr, key)
 
   if err == orm.ErrNoRows || err == orm.ErrMissPK {
     return false
