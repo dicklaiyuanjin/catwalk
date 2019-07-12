@@ -18,7 +18,7 @@ func (this *AppController) App() {
   var userinfo models.JsUif
   userinfo.Username = usr
   var icon template.URL
-  if models.ReadUserInfo(&userinfo, "username") == true {
+  if models.Crud.Uif.Read(&userinfo, "username") == true {
     if userinfo.Icon == "" {
       icon = template.URL("/static/img/icon.png")
     } else {
@@ -75,7 +75,7 @@ func (this *AppController) AppSettingUpload() {
   var userinfo models.JsUif
   resbody := this.Ctx.Input.RequestBody
   if models.CwJSON.Unmarshal(resbody, &userinfo) == true {
-    if models.UpdateIconOfUserInfo(&userinfo) == true {
+    if models.Crud.Uif.UpdateIcon(&userinfo) == true {
       b.State = 1
     }
   }

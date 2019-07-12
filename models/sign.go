@@ -21,7 +21,7 @@ func AuthSignupHelper(b *JsSign, resbody []byte, idkey string) string {
 
   userinfo.Username = user.Username
 
-  if InsertUserInfo(&userinfo) == false {
+  if Crud.Uif.Insert(&userinfo) == false {
     return ""
   }
 

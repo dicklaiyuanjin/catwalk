@@ -9,6 +9,7 @@ type CrudModel struct {
   FriendList *flTbl
   Invitation *ivttTbl
   User *userTbl
+  Uif *userinfoTbl
 }
 
 var Crud CrudModel
@@ -351,5 +352,128 @@ func (user *userTbl) SetUnActive(u string) bool {
     } else {
       return false
     }
+  }
+}
+
+/***************************************************
+ * userinfo table
+ **************************************************/
+type userinfoTbl struct {
+  name string
+}
+
+func (uif *userinfoTbl) Insert(u *JsUif) bool {
+  if Crud.User.Exist(u.Username) {
+    return false
+  }
+
+  o := orm.NewOrm()
+  o.Using("default")
+  userinfo :=  Userinfo{
+    Username: u.Username,
+    Nickname: u.Nickname,
+    Email: u.Email,
+    Motto: u.Motto,
+    Icon: u.Icon,
+  }
+
+  _, err := o.Insert(&userinfo)
+  if err == nil {
+    return true
+  }
+
+  return false
+}
+
+func (uif *userinfoTbl) Read(u *JsUif, key string) bool {
+  o := orm.NewOrm()
+  o.Using("default")
+
+  usr := Userinfo{
+    Username: u.Username,
+    Nickname: u.Nickname,
+    Email: u.Email,
+    Motto: u.Motto,
+    Icon: u.Icon,
+  }
+
+  err := o.Read(&usr, key)
+
+  if err == orm.ErrNoRows || err == orm.ErrMissPK {
+    return false
+  } else {
+    u.Username = usr.Username
+    u.Nickname = usr.Nickname
+    u.Email = usr.Email
+    u.Motto = usr.Motto
+    u.Icon = usr.Icon
+    return true
+  }
+}
+
+func (uif *userinfoTbl) Update(u *JsUif) bool {
+  o := orm.NewOrm()
+  o.Using("default")
+
+  usr := Userinfo{Username: u.Username}
+
+  if o.Read(&usr) == nil {
+    usr.Nickname = u.Nickname
+    usr.Email = u.Email
+    usr.Motto = u.Motto
+
+    if num, err := o.Update(&usr, "Nickname", "Email", "Motto"); err == nil {
+      if num == 1 {
+        return true
+      }
+    }
+  }
+
+  return false
+
+}
+
+func (uif *userinfoTbl) UpdateIcon(u *JsUif) bool {
+  o := orm.NewOrm()
+  o.Using("default")
+
+  usr := Userinfo{Username: u.Username}
+
+  if o.Read(&usr) == nil {
+    usr.Icon = u.Icon
+    if _, err := o.Update(&usr, "Icon"); err == nil {
+      return true
+    }
+  }
+  return false
+}
+
+func (uif *userinfoTbl) ExistNickname(nickname string) bool {
+  o := orm.NewOrm()
+  o.Using("default")
+
+  usr := Userinfo{Nickname: nickname}
+
+  err := o.Read(&usr, "Nickname")
+
+  if err == orm.ErrNoRows || err == orm.ErrMissPK {
+    return false
+  } else {
+    return true
+  }
+}
+
+func (uif *userinfoTbl) ExistEmail(email string) bool {
+  o := orm.NewOrm()
+  o.Using("default")
+
+  usr := Userinfo{Email: email}
+
+  err := o.Read(&usr, "Email")
+
+  if err == orm.ErrNoRows || err == orm.ErrMissPK {
+    return false
+  } else {
+    return true
   }
 }
