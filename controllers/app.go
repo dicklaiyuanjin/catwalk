@@ -31,7 +31,8 @@ func (this *AppController) App() {
   //invitation part
   //作为reciver，获得所有sender发送给自己的invitation
   var inviArr []models.JsIvtt
-  ok := models.Crud.Invitation.ReadList(inviArr, userinfo.Username, "Receiver")
+  ok := models.Crud.Invitation.ReadList(&inviArr, userinfo.Username, "Receiver")
+  fmt.Println(inviArr)
   if ok {
     this.Data["Invitations"] = inviArr
   }

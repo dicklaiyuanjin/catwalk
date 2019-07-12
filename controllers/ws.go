@@ -11,13 +11,6 @@ type WsController struct {
 	beego.Controller
 }
 
-var ivttHub *models.IvttHub
-
-func init() {
-  ivttHub = models.NewIvttHub()
-  go ivttHub.Run()
-}
-
 func (this *WsController) JoinIvttUser() {
   username := this.GetString("username")
   if len(username) == 0 {
@@ -39,13 +32,13 @@ func (this *WsController) JoinIvttUser() {
     Conn: conn,
   }
 
-  ivttHub.RegisterConn(&conninfo)
+  models.Hub.RegisterConn(&conninfo)
   defer func(){
-    ivttHub.CloseConn(&conninfo)
+    models.Hub.CloseConn(&conninfo)
   }()
 
-  go ivttHub.RecMsg(&conninfo)
-  ivttHub.SendMsg(&conninfo)
+  go models.Hub.RecMsg(&conninfo)
+  models.Hub.SendMsg(&conninfo)
 }
 
 func (this *WsController) ReplyIvttUser() {

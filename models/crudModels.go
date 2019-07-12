@@ -167,7 +167,7 @@ func (ivtt *ivttTbl) Exist(sdr string, rec string) bool {
  * name: username
  * key: "sender" or "receiver"
  */
-func (ivtt *ivttTbl) ReadList(result []JsIvtt, name string, key string) bool {
+func (ivtt *ivttTbl) ReadList(result *[]JsIvtt, name string, key string) bool {
   o := orm.NewOrm()
   o.Using("default")
 
@@ -180,7 +180,7 @@ func (ivtt *ivttTbl) ReadList(result []JsIvtt, name string, key string) bool {
       item.Sender = v.Sender
       item.Receiver = v.Receiver
       item.Msg = v.Msg
-      result = append(result, item)
+      *result = append(*result, item)
     }
     return true
   }

@@ -5,20 +5,31 @@ import (
   "fmt"
 )
 
+var Hub *HubModel
+
+func init() {
+  Hub = NewHub()
+  go Hub.Run()
+}
+
+
+type ConnInfo struct {
+  Username string
+  Conn *websocket.Conn
+}
 
 /******************************************************
 * invitation send part
 ******************************************************/
-
-type IvttHub struct {
+type HubModel struct {
   conns map[string]*websocket.Conn
   register chan *ConnInfo
   unregister chan *ConnInfo
   broadcast chan []byte
 }
 
-func NewIvttHub() *IvttHub {
-  return &IvttHub{
+func NewHub() *HubModel {
+  return &HubModel{
     conns: make(map[string]*websocket.Conn),
     register: make(chan *ConnInfo),
     unregister: make(chan *ConnInfo),
@@ -26,7 +37,7 @@ func NewIvttHub() *IvttHub {
   }
 }
 
-func (hub *IvttHub) Run() {
+func (hub *HubModel) Run() {
   for {
     select {
       case conninfo := <-hub.register:
@@ -40,18 +51,18 @@ func (hub *IvttHub) Run() {
   }
 }
 
-func (hub *IvttHub) CloseConn(ci *ConnInfo) {
+func (hub *HubModel) CloseConn(ci *ConnInfo) {
   if _, ok := hub.conns[ci.Username]; ok {
     delete(hub.conns, ci.Username)
     ci.Conn.Close()
   }
 }
 
-func (hub *IvttHub) RegisterConn(ci *ConnInfo) {
+func (hub *HubModel) RegisterConn(ci *ConnInfo) {
   hub.register <- ci
 }
 
-func (hub *IvttHub) RecMsg(ci *ConnInfo) {
+func (hub *HubModel) RecMsg(ci *ConnInfo) {
   defer func(){
     hub.unregister <- ci
   }()
@@ -64,7 +75,7 @@ func (hub *IvttHub) RecMsg(ci *ConnInfo) {
 
     var ivtt JsIvtt
     if CwJSON.Unmarshal(msg, &ivtt) == true {
-      fmt.Println("ivtt!!!!!!!!!!!!!!!!!!!!!!!!: ", ivtt)
+      fmt.Println("rec ivtt!!!!!!!!!!!!!!!!!!!!!!!!: ", ivtt)
       if Crud.User.Exist(ivtt.Sender) && Crud.User.Exist(ivtt.Receiver) {
         if Crud.Invitation.Insert(&ivtt) == true {
           hub.broadcast <- msg
@@ -74,12 +85,13 @@ func (hub *IvttHub) RecMsg(ci *ConnInfo) {
   }
 }
 
-func (hub *IvttHub) SendMsg(ci *ConnInfo) {
+func (hub *HubModel) SendMsg(ci *ConnInfo) {
   for {
     msg := <-hub.broadcast
     var ivtt JsIvtt
     if CwJSON.Unmarshal(msg, &ivtt) == true {
-      if v, ok :=hub.conns[ivtt.Receiver]; ok {
+      fmt.Println("send msg!!!!!!!!!!!!!!!!!!!!!!!!: ", ivtt)
+      if v, ok := hub.conns[ivtt.Receiver]; ok {
         v.WriteMessage(1, msg)
       }
     }
