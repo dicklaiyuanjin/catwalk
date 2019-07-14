@@ -121,6 +121,13 @@ func (d *DataModel) Ivtt(i *JsIvtt, msg []byte, hub *HubModel) bool {
   ok := Crud.User.Exist(i.Sender) && Crud.User.Exist(i.Receiver)
   if !ok { return false }
 
+  ok = Crud.FriendList.ExistList(&JsFl{
+    Username: i.Sender,
+    Friusername: i.Receiver,
+  })
+
+  if ok { return false }
+
   ok = Crud.Invitation.Insert(i)
 
   if !ok { return false }
@@ -165,19 +172,17 @@ func (d *DataModel) Rpl(r *JsRpl, msg []byte, hub *HubModel) bool {
   }
 
   //发送reply给对方，让对方获悉自己的邀请是否成功
-  //v, ok := hub.Exist(r.Obj)
-  //if !ok { return false }
+  v, ok := hub.Exist(r.Obj)
+  if !ok { return false }
 
-  //v.WriteMessage(1, msg)
+  v.WriteMessage(1, msg)
   return true
 }
 
 //将src的info发送给obj在线用户
 func (d *DataModel) SendFif(src string, obj string, hub *HubModel) bool {
   Src := JsUif{Username: src}
-  fmt.Println("source: ", Src)
   ok := Crud.Uif.Read(&Src, "Username")
-  fmt.Println("read ok: ", ok)
   if !ok { return false }
 
   ws := WsData{
@@ -187,12 +192,11 @@ func (d *DataModel) SendFif(src string, obj string, hub *HubModel) bool {
 
   data, ok := CwJSON.Marshal(ws)
   if !ok { return false }
-  fmt.Println("marshal ok: ", ok)
 
   v, ok := hub.Exist(obj)
   if !ok { return false }
-  fmt.Println("exist ok: ", ok)
-  fmt.Println("obj: ", obj)
+
+  fmt.Println("fif!!!!!!!!!!!!!!!!: ", ws.Fif.Username);
 
   v.WriteMessage(1, data)
   return true

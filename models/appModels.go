@@ -40,13 +40,13 @@ func (s *signForm) Up(b *JsSign, resbody []byte, idkey string) string {
 
   userinfo.Username = user.Username
   userinfo.Nickname = user.Username
+  userinfo.Icon = "/static/img/icon.png"
 
   if Crud.Uif.Insert(&userinfo) == false {
     return ""
   }
 
 
-  Crud.User.SetActive(user.Username)
   b.State = 1
   return user.Username
 }

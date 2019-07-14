@@ -11,6 +11,10 @@ type HtmlController struct {
 }
 
 func (this *HtmlController) Index() {
+  if this.GetSession("username") != nil {
+    this.Ctx.Redirect(302, "/app")
+    return
+  }
 	this.TplName = "index.tpl"
 }
 

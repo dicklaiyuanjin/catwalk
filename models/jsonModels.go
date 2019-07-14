@@ -80,8 +80,8 @@ type JsUif struct {
   Username string `json:"username"`
   Nickname string `json:"nickname"`
   Email string `json:"email"`
-  Motto string `json"motto"`
-  Icon template.URL `json"icon"`
+  Motto string `json:"motto"`
+  Icon template.URL `json:"icon"`
 }
 
 

@@ -1,9 +1,10 @@
-$(document).ready(function(){
+$(document).ready(function(){ 
+
   function ivttWebsocket() {
     const socket = new WebSocket('ws://' + window.location.host + '/ws/join?username=' + $('#username').val());
     
     socket.onmessage = function (event) {
-      console.log("event.data: ", event.data);
+      console.log("event.data: ", event.data)
       if (event.data != "") {
         var data = JSON.parse(event.data);
         RecData(data, socket);
@@ -93,10 +94,16 @@ $(document).ready(function(){
 
   function rec_rpl(data, socket) {
     console.log("ivtt.rpl: ", data);
+    //在对方同意我的邀请的情况下，如果对方曾向我发起邀请，那么就删除该邀请
+    if ($("#" + data.me + "-invite").length != 0) {
+      $("#" + data.me + "-invite").remove();
+    }
   }
 
   function rec_fif(data, socket) {
-    console.log("fif: ", data);
+    if (!isFriExist(data.username)) {
+      $("#frimain").append(newFriBox(data));
+    }
   }
 
   /**********************************
@@ -117,10 +124,8 @@ $(document).ready(function(){
       }, 1);
 
       socket.send(data);
-      
-      console.log("removeEnvelope: ", data);
+       
       var idname = "#" + sdrname + "-invite";
-      console.log("remove idname: ", idname);
       $(idname).remove();
     }
      
@@ -155,7 +160,60 @@ $(document).ready(function(){
   function isSenderExist(sdr) {
     return $("#" + sdr).length != 0;
   }
+
+  function isFriExist(fri) {
+    return $("#" + fri + "-box").length != 0;
+  }
   
+
+  function newFriBox(data) {
+    var fribox = document.createElement('div')
+    fribox.setAttribute('id', data.username + "-box");
+    fribox.setAttribute('class', 'fribox col-xs-4 col-sm-3 col-md-2')
+
+    var content = document.createElement('div');
+    content.setAttribute('id', data.username + '-box-content');
+    content.setAttribute('class', 'fribox-content container-fluid')
+
+    var icon = document.createElement('div');
+    icon.setAttribute('id', data.username +'-box-icon');
+    icon.setAttribute('class', 'row fribox-icon');
+
+    var img = document.createElement('img');
+    img.setAttribute('src', data.icon);
+    img.setAttribute('class', "fribox-img img-circle img-responsive");
+    img.setAttribute('alt', data.username + '-icon');
+
+    img.onload = function() {
+      img.height = img.width;
+    }
+
+    icon.append(img);
+
+    var usr = document.createElement('div');
+    usr.setAttribute('id', data.username + "-box-username");
+    usr.setAttribute('class', "row fribox-username");
+
+    var p1 = document.createElement('p');
+    p1.setAttribute('class', 'text-muted text-center');
+    p1.innerHTML = data.username;
+
+    usr.append(p1);
+    
+    var nik = document.createElement('div');
+    nik.setAttribute('id', data.username + "-box-nickname");
+    nik.setAttribute('class', "row fribox-nickname");
+
+    var p2 = document.createElement('p');
+    p2.setAttribute('class', 'text-primary text-center');
+    p2.innerHTML = data.nickname;
+
+    nik.append(p2);
+
+    content.append(icon, usr, nik);
+    fribox.append(content);
+    return fribox;
+  }
 
   function newEnvelope(data) {
     var invite = document.createElement('div');

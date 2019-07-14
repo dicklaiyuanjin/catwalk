@@ -23,15 +23,22 @@ func (this *AuthController) AuthSignin() {
   var user models.JsUser
   ok := models.CwJSON.Unmarshal(this.Ctx.Input.RequestBody, &user)
   fmt.Println("user!!!!!!!!!!!!!!!!!!!!!!!!!!: ", user)
-  if ok {
-    if models.Crud.User.Verify(&user) == true &&
-        models.App.Captcha.Verify(this.GetSession("idkey").(string), string(user.Captchainput)) {
-      this.SetSession("username", user.Username)
-      models.Crud.User.SetActive(user.Username)
-      b = models.JsSign{State: 1}
-    }
+  if !ok {
+    this.Data["json"] = b
+    this.ServeJSON()
+    return
   }
 
+  ok = models.Crud.User.Verify(&user) && models.App.Captcha.Verify(this.GetSession("idkey").(string), string(user.Captchainput))
+
+  if !ok {
+    this.Data["json"] = b
+    this.ServeJSON()
+    return
+  }
+
+  this.SetSession("username", user.Username)
+  b = models.JsSign{State: 1}
   this.Data["json"] = b
   this.ServeJSON()
 

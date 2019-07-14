@@ -158,11 +158,12 @@ function upload_handler() {
   var sp = document.getElementById("icon-img");
   var f = window.URL.createObjectURL(icon.files[0]);
   sp.src = f;
+
   sp.onload = function() {
     var cvs = document.createElement("canvas");
     var ctx = cvs.getContext('2d');
-    cvs.width = sp.width;
-    cvs.height = sp.width;
+    cvs.width = 125;
+    cvs.height = 125;
     ctx.drawImage(sp, 0, 0, cvs.width, cvs.height);
     var base64 = cvs.toDataURL("image/jpeg", 0.5);
     var jsondata = JSON.stringify({

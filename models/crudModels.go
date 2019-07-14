@@ -48,8 +48,8 @@ func (fl *flTbl) Insert(f *JsFl) bool {
   }
 
   fri2 := Friendlist{
-    Username: f.Username,
-    Friusername: f.Friusername,
+    Username: f.Friusername,
+    Friusername: f.Username,
   }
 
   if fl.ExistList(f) == false && f.Username != f.Friusername {
@@ -462,4 +462,18 @@ func (uif *userinfoTbl) Exist(content string, key string) bool {
   } else {
     return true
   }
+}
+
+func (uif *userinfoTbl) ReadFifList(u *[]JsUif, f *[]JsFl) bool {
+  o := orm.NewOrm()
+  o.Using("default")
+
+  for _, v := range *f {
+    item := JsUif{Username: v.Friusername}
+    ok := uif.Read(&item, "Username")
+    if !ok { return false }
+    *u = append(*u, item)
+  }
+
+  return true
 }

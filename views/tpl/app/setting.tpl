@@ -3,8 +3,8 @@
     <div id="setting-content" class="col-xs-offset-1 col-xs-10 col-sm-offset-3 col-sm-6">
       <form class="form-horizontal" id="setting-form">
         <div class="form-group">
-          <div class="col-xs-offset-4 col-xs-4 col-sm-offset-4 col-sm-4">
-            <img id="icon-img" src="{{.icon}}" class="img-responsive" alt="user icon" >
+          <div id="icon-img-wrapper" class="col-xs-offset-4 col-xs-4 col-sm-offset-4 col-sm-4">
+            <img id="icon-img" src="{{.userinfo.Icon}}" class="img-responsive" alt="user icon" >
           </div>
         </div>
 
