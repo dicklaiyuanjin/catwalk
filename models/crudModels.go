@@ -188,21 +188,16 @@ func (ivtt *ivttTbl) ReadList(result *[]JsIvtt, name string, key string) bool {
   return false
 }
 
-/*
- * name: username
- * key: "sender" or "receiver"
- */
-func (ivtt *ivttTbl) ReadId(name string, key string) (int, bool) {
+func (ivtt *ivttTbl) ReadId(sdr string, rec string) (int, bool) {
   o := orm.NewOrm()
   o.Using("default")
 
-  var invite Invitation
-  err := o.Read(&invite, key)
+  var invite []Invitation
 
-  num, err := o.QueryTable("invitation").Filter(key, name).All(&invite)
+  num, err := o.QueryTable("invitation").Filter("sender", sdr).Filter("receiver",  rec).All(&invite)
   if err == nil {
     if num == 1 {
-      return invite.Iid, true
+      return invite[0].Iid, true
     }
   }
 
@@ -210,18 +205,16 @@ func (ivtt *ivttTbl) ReadId(name string, key string) (int, bool) {
 
 }
 
-//对称删除
+//单项删除
 func (ivtt *ivttTbl) Delete(sdr string, rec string) bool {
   o := orm.NewOrm()
   o.Using("default")
 
-  id1, ok1 := ivtt.ReadId(sdr, "sender")
-  id2, ok2 := ivtt.ReadId(rec, "receiver")
+  id, ok := ivtt.ReadId(sdr, rec)
 
-  if ok1 && ok2 {
-    _, err1 := o.Delete(&Invitation{Iid: id1})
-    _, err2 := o.Delete(&Invitation{Iid: id2})
-    if err1 == nil && err2 == nil {
+  if ok {
+    _, err := o.Delete(&Invitation{Iid: id})
+    if err == nil {
       return true
     }
   }

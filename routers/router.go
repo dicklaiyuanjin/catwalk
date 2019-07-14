@@ -22,8 +22,6 @@ func init() {
   beego.Router("/app/setting/signout", &controllers.AppController{}, "get:AppSettingSignout")
   beego.Router("/app/setting/edit", &controllers.AppController{}, "post:AppSettingEdit")
   beego.Router("/app/setting/upload", &controllers.AppController{}, "post:AppSettingUpload")
-  beego.Router("/app/invitation/agree", &controllers.AppController{}, "post:AppInvitationAgree")
-  beego.Router("/app/invitation/refuse", &controllers.AppController{}, "post:AppInvitationRefuse")
 
   //Webocket Router: handle websocket
   beego.Router("/ws/join", &controllers.WsController{}, "get:JoinUser")

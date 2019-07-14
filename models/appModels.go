@@ -30,7 +30,7 @@ func (s *signForm) Up(b *JsSign, resbody []byte, idkey string) string {
     return ""
   }
 
-  if App.Captcha.Verify(idkey, user.Captchainput) == false {
+  if App.Captcha.Verify(idkey, string(user.Captchainput)) == false {
     return ""
   }
 

@@ -2,6 +2,7 @@ package models
 
 import (
   "encoding/json"
+  "html/template"
 )
 
 type CwJSONModel struct {
@@ -17,16 +18,26 @@ func (cj *CwJSONModel) Unmarshal(resbody []byte, v interface{}) bool {
   return false
 }
 
+func (cj *CwJSONModel) Marshal (v interface{}) ([]byte, bool) {
+  if b, err := json.Marshal(v); err == nil {
+    return b, true
+  }
+
+  return nil, false
+}
+
 /*********************************************************
  * the websocket data between back-end and front-end
  * code represent the type
- * 0: Ivtt
- * 1: Rpl
+ * 0: Ivtt(invitation)
+ * 1: Rpl(reply)
+ * 2: fif(friendinfo)
  ********************************************************/
 type WsData struct {
-  Code int `json:code`
+  Code int `json:"code"`
   Ivtt JsIvtt `json:"ivtt"`
   Rpl JsRpl `json:"rpl"`
+  Fif JsUif `json:"fif"`
 }
 
 
@@ -58,7 +69,7 @@ type JsUifSign struct {
 type JsUser struct {
   Username string `json:"username"`
   Password string `json:"password"`
-  Captchainput string `json:"captchainput"`
+  Captchainput template.URL `json:"captchainput"`
 }
 
 
@@ -70,7 +81,7 @@ type JsUif struct {
   Nickname string `json:"nickname"`
   Email string `json:"email"`
   Motto string `json"motto"`
-  Icon string `json"icon"`
+  Icon template.URL `json"icon"`
 }
 
 
@@ -86,11 +97,13 @@ type JsIvtt struct {
   Msg string `json:"msg"`
 }
 
-/********************************************
+/*************************************************
  * JsRpl(Rpl:reply)
- *******************************************/
+ ************************************************/
 type JsRpl struct {
-  Content string `json:"content"`
+  Me string `json:"me"`
+  Obj string `json:"obj"`
+  Attitude string `json:"attitude"`
 }
 
 

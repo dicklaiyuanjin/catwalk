@@ -3,16 +3,16 @@ $(document).ready(function(){
     const socket = new WebSocket('ws://' + window.location.host + '/ws/join?username=' + $('#username').val());
     
     socket.onmessage = function (event) {
+      console.log("event.data: ", event.data);
       if (event.data != "") {
         var data = JSON.parse(event.data);
-        console.log("data: ", data);
-        RecData(data);
+        RecData(data, socket);
       }
     }
     
     
     $("#invite-send").click(function(){
-      var data = SendData({
+      var data = InitData({
         sender: $('#username').val(),
         receiver: $('#receiver-name').val(),
         msg: $('#invite-message').val()
@@ -30,8 +30,9 @@ $(document).ready(function(){
    * t is data type
    * 0: invitation
    * 1: reply
+   * 2: friendinfo
    */
-  function SendData(data, t) {
+  function InitData(data, t) {
     var ws = {
       code: t,
       ivtt: {
@@ -40,73 +41,86 @@ $(document).ready(function(){
         msg: ""
       },
       rpl: {
-        content: ""
+        me: "",
+        obj: "",
+        attitude: ""
+      },
+      fif : {
+        username: "",
+        nickname: "",
+        email: "",
+        motto: "",
+        icon: ""
       }
-    };
+   };
 
     switch (t) {
     case 0:
-      ws.ivtt = data
+      ws.ivtt = data;
       break;
     case 1:
-      ws.rpl = data
+      ws.rpl = data;
+      break;
+    case 2:
+      ws.fif = data;
       break;
     }
     return JSON.stringify(ws);
   }
 
-  function RecData(data) {
+  function RecData(data, socket) {
     switch (data.code) {
     case 0:
-      rec_ivtt(data.ivtt);
+      rec_ivtt(data.ivtt, socket);
+      break;
     case 1:
-      rec_rpl(data.rpl);
+      rec_rpl(data.rpl, socket);
+      break;
+    case 2:
+      rec_fif(data.fif, socket);
+      break;
     }
   }
 
-  function rec_ivtt(data) {
+  function rec_ivtt(data, socket) {
     if (data.sender != $('#username').val()) {
       if (!isSenderExist(data.sender)) {
         $("#rec-envelope").append(newEnvelope(data));
-        recEnvelope(data.sender);
+        recEnvelope(data.sender, socket);
       }
     }
   }
 
-  function rec_rpl(data){
-  
+  function rec_rpl(data, socket) {
+    console.log("ivtt.rpl: ", data);
+  }
+
+  function rec_fif(data, socket) {
+    console.log("fif: ", data);
   }
 
   /**********************************
   * invitation part
   ***********************************/
-  function recEnvelope(sendername) {
+  function recEnvelope(sendername, socket) {
     $("#" + sendername + "-invite-content").hide();
 
     $("#" + sendername + "-invite-brand").click(function(){ 
       $("#" + sendername + "-invite-content").slideToggle();
     });
 
-    function removeEnvelope(sdrname, action) {
-      var data = JSON.stringify({
-        sender: sdrname,
-        receiver: $('#username').val(),
-        msg: ""
-      });
+    function removeEnvelope(sdrname, att) {
+      var data = InitData({
+        me: $("#username").val(),
+        obj: sdrname,
+        Attitude: att
+      }, 1);
 
-      if (action == "agree") {
-        $.post("/app/invitation/agree", data, function(data, status){
-          console.log("status: ", status);
-          console.log("data: ", data);
-        });
-      } else if (action == "refuse") {
-        $.post("/app/invitation/refuse", data, function(data, status){
-          console.log("status: ", status);
-          console.log("data: ", data);
-        });
-      }
-
-      var idname = "#" + sdrname + "-envelope";
+      socket.send(data);
+      
+      console.log("removeEnvelope: ", data);
+      var idname = "#" + sdrname + "-invite";
+      console.log("remove idname: ", idname);
       $(idname).remove();
     }
      

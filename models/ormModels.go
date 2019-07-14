@@ -3,6 +3,7 @@ package models
 import (
   "github.com/astaxie/beego/orm"
   _ "github.com/go-sql-driver/mysql"
+  "html/template"
 )
 
 type User struct {
@@ -17,7 +18,7 @@ type Userinfo struct {
   Nickname string `orm:"column(nickname)"`
   Email string `orm:"column(email)"`
   Motto string `orm:"column(motto)"`
-  Icon string `orm:"column(icon)"`
+  Icon template.URL `orm:"column(icon)"`
 }
 
 //Sender and Receiver should be username

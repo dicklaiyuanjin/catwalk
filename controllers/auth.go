@@ -25,7 +25,7 @@ func (this *AuthController) AuthSignin() {
   fmt.Println("user!!!!!!!!!!!!!!!!!!!!!!!!!!: ", user)
   if ok {
     if models.Crud.User.Verify(&user) == true &&
-        models.App.Captcha.Verify(this.GetSession("idkey").(string), user.Captchainput) {
+        models.App.Captcha.Verify(this.GetSession("idkey").(string), string(user.Captchainput)) {
       this.SetSession("username", user.Username)
       models.Crud.User.SetActive(user.Username)
       b = models.JsSign{State: 1}

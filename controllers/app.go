@@ -85,35 +85,3 @@ func (this *AppController) AppSettingUpload() {
 
 }
 
-/******************************************
-* following is invitation part
-******************************************/
-
-func (this *AppController) AppInvitationAgree() {
-  b := models.JsSign{State: 0}
-  var ivtt models.JsIvtt
-  resbody := this.Ctx.Input.RequestBody
-  if models.CwJSON.Unmarshal(resbody, &ivtt) == true {
-    fmt.Println("agree!!!!!!!!!!!!!: ", ivtt)
-    //同意之后，将信息放入好友列表
-    //除了将信息发送回发送方，还要发送成功信息给对方，这个需要依靠websocket实现
-    b.State = 1
-  }
-  this.Data["json"] = b
-  this.ServeJSON()
-}
-
-func (this *AppController) AppInvitationRefuse() {
-  b := models.JsSign{State: 0}
-  var ivtt models.JsIvtt
-  resbody := this.Ctx.Input.RequestBody
-  if models.CwJSON.Unmarshal(resbody, &ivtt) == true {
-    fmt.Println("refuse!!!!!!!!!!!!!!!:", ivtt)
-    //拒绝之后，不需进行数据库操作，也不需要告诉对方
-    b.State = 1
-  }
-  this.Data["json"] = b
-  this.ServeJSON()
-}
-
-

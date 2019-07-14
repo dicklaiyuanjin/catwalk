@@ -18,7 +18,7 @@ func (this *WsController) JoinUser() {
     return
   }
 
-  conn, err := websocket.Upgrade(this.Ctx.ResponseWriter, this.Ctx.Request, nil, 1024, 1024)
+  conn, err := websocket.Upgrade(this.Ctx.ResponseWriter, this.Ctx.Request, nil, 10240, 10240)
   if _, ok := err.(websocket.HandshakeError); ok {
 		http.Error(this.Ctx.ResponseWriter, "Not a websocket handshake", 400)
 		return
