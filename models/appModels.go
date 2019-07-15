@@ -8,9 +8,37 @@ type AppModel struct {
   Sign *signForm
   Setting *setting
   Captcha *captchaTool
+  Msg *msgTool
 }
 
 var App AppModel
+/***********************************************
+ * msg tool
+ **********************************************/
+type msgTool struct {
+  name string
+}
+
+func (mt *msgTool) CheckAndInsert(m *JsMsg) bool {
+  ok := Crud.User.Exist(m.Sender) && Crud.User.Exist(m.Receiver)
+  if !ok { return false }
+
+  ok = Crud.FriendList.ExistList(&JsFl{
+    Username: m.Sender,
+    Friusername: m.Receiver,
+  })
+  if !ok { return false }
+
+  ok = (m.Content != "")
+  if !ok { return false }
+
+  ok = Crud.Msg.Insert(m)
+  if !ok { return false }
+
+  return true
+}
+
+
 
 /**********************************************
  * signform

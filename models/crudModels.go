@@ -10,9 +10,36 @@ type CrudModel struct {
   Invitation *ivttTbl
   User *userTbl
   Uif *userinfoTbl
+  Msg *msgTbl
 }
 
 var Crud CrudModel
+
+
+/**********************************************************************
+ * msg table
+ *********************************************************************/
+type msgTbl struct {
+  name string
+}
+
+func (mt *msgTbl) Insert(m *JsMsg) bool {
+  o := orm.NewOrm()
+  o.Using("default")
+
+  msg := Msg{
+    Sender: m.Sender,
+    Receiver: m.Receiver,
+    Content: m.Content,
+    Sendtime: m.Sendtime,
+  }
+
+  _, err := o.Insert(&msg)
+  if err == nil { return true }
+
+  return false
+}
+
 
 /************************************************************************
  * friendlist table

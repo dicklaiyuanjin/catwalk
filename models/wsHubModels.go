@@ -100,24 +100,26 @@ type DataModel struct {
  * get the selected data
  * return target, ok
  */
-func (d *DataModel) Handler(msg []byte, hub *HubModel) bool {
+func (d *DataModel) Handler(data []byte, hub *HubModel) bool {
   var ws WsData
-  fmt.Println("msg!!!!!!!!!!!!!!!!!!: ", string(msg))
-  ok := CwJSON.Unmarshal(msg, &ws)
+  fmt.Println("msg!!!!!!!!!!!!!!!!!!: ", string(data))
+  ok := CwJSON.Unmarshal(data, &ws)
   fmt.Println("wsData!!!!!!!!!!!!!!!!!!!!!:", ws)
   if !ok { return false }
 
   switch ws.Code {
   case 0:
-    return d.Ivtt(&ws.Ivtt, msg, hub)
+    return d.Ivtt(&ws.Ivtt, data, hub)
   case 1:
-    return d.Rpl(&ws.Rpl, msg, hub)
+    return d.Rpl(&ws.Rpl, data, hub)
+  case 3:
+    return d.Msg(&ws.Msg, data, hub)
   }
 
   return false
 }
 
-func (d *DataModel) Ivtt(i *JsIvtt, msg []byte, hub *HubModel) bool {
+func (d *DataModel) Ivtt(i *JsIvtt, data []byte, hub *HubModel) bool {
   ok := Crud.User.Exist(i.Sender) && Crud.User.Exist(i.Receiver)
   if !ok { return false }
 
@@ -134,12 +136,12 @@ func (d *DataModel) Ivtt(i *JsIvtt, msg []byte, hub *HubModel) bool {
 
   v, ok := hub.Exist(i.Receiver)
   if !ok { return false }
-  v.WriteMessage(1, msg)
+  v.WriteMessage(1, data)
 
   return true
 }
 
-func (d *DataModel) Rpl(r *JsRpl, msg []byte, hub *HubModel) bool {
+func (d *DataModel) Rpl(r *JsRpl, data []byte, hub *HubModel) bool {
   //1.查看是否有这么一条好友邀请
   //1.1若有，则删除，继续下一步（2）
   //1.2否则，返回错误信息
@@ -175,7 +177,7 @@ func (d *DataModel) Rpl(r *JsRpl, msg []byte, hub *HubModel) bool {
   v, ok := hub.Exist(r.Obj)
   if !ok { return false }
 
-  v.WriteMessage(1, msg)
+  v.WriteMessage(1, data)
   return true
 }
 
@@ -199,5 +201,18 @@ func (d *DataModel) SendFif(src string, obj string, hub *HubModel) bool {
   fmt.Println("fif!!!!!!!!!!!!!!!!: ", ws.Fif.Username);
 
   v.WriteMessage(1, data)
+  return true
+}
+
+func (d *DataModel) Msg(m *JsMsg, data []byte, hub *HubModel) bool {
+  ok := App.Msg.CheckAndInsert(m)
+  if !ok { return false }
+
+  v, ok := hub.Exist(m.Receiver)
+  v.WriteMessage(1, data)
+
+  v, ok = hub.Exist(m.Sender)
+  v.WriteMessage(1, data)
+
   return true
 }

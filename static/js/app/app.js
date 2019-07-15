@@ -32,6 +32,7 @@ $(document).ready(function(){
    * 0: invitation
    * 1: reply
    * 2: friendinfo
+   * 3: Msg
    */
   function InitData(data, t) {
     var ws = {
@@ -46,12 +47,18 @@ $(document).ready(function(){
         obj: "",
         attitude: ""
       },
-      fif : {
+      fif: {
         username: "",
         nickname: "",
         email: "",
         motto: "",
         icon: ""
+      },
+      msg: {
+        sender: "",
+        receiver: "",
+        content: "",
+        sendtime: ""
       }
    };
 
@@ -64,6 +71,9 @@ $(document).ready(function(){
       break;
     case 2:
       ws.fif = data;
+      break;
+    case 3:
+      ws.msg = data;
       break;
     }
     return JSON.stringify(ws);
@@ -80,6 +90,9 @@ $(document).ready(function(){
     case 2:
       rec_fif(data.fif, socket);
       break;
+    case 3:
+      rec_msg(data.msg, socket);
+      break;
     }
   }
 
@@ -93,7 +106,6 @@ $(document).ready(function(){
   }
 
   function rec_rpl(data, socket) {
-    console.log("ivtt.rpl: ", data);
     //在对方同意我的邀请的情况下，如果对方曾向我发起邀请，那么就删除该邀请
     if ($("#" + data.me + "-invite").length != 0) {
       $("#" + data.me + "-invite").remove();
@@ -104,6 +116,10 @@ $(document).ready(function(){
     if (!isFriExist(data.username)) {
       $("#frimain").append(newFriBox(data));
     }
+  }
+
+  function rec_msg(data, socket){
+    console.log("rec msg data: ", data);
   }
 
   /**********************************

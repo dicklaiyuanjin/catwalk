@@ -38,6 +38,7 @@ type WsData struct {
   Ivtt JsIvtt `json:"ivtt"`
   Rpl JsRpl `json:"rpl"`
   Fif JsUif `json:"fif"`
+  Msg JsMsg `json:"msg"`
 }
 
 
@@ -115,4 +116,12 @@ type JsFl struct {
   Friusername string `json:"friusername"`
 }
 
-
+/*********************************************
+ * JsMsg(Msg: message)
+ ********************************************/
+type JsMsg struct {
+  Sender string `json:"sender"`
+  Receiver string `json:"receiver"`
+  Content string `json:"content"`
+  Sendtime string `json:"sendtime"`
+}
