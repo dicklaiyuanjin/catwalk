@@ -20,16 +20,10 @@ func (this *AppController) App() {
     return
   }
 
-  ok := models.Crud.User.SetActive(usr);
-  if !ok {
-    rToI(this)
-    return
-  }
-
   //setting part
   var userinfo models.JsUif
   userinfo.Username = usr
-  ok = models.Crud.Uif.Read(&userinfo, "username")
+  ok := models.Crud.Uif.Read(&userinfo, "username")
   if !ok {
     rToI(this)
     return
@@ -78,15 +72,10 @@ func (this *AppController) App() {
 
 func (this *AppController) AppSettingSignout() {
   //注销session
-  //修改数据库数据表user中相应的isactive字段
-  u := this.GetSession("username")
-  this.DestroySession()
-  b := models.JsSign{State: 0}
-  if models.Crud.User.SetUnActive(u.(string)) == true {
-    b.State = 1
+  if this.GetSession("username") != nil {
+    this.DestroySession()
+    this.ServeJSON()
   }
-  this.Data["json"] = b
-  this.ServeJSON()
 
 }
 

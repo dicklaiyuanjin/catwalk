@@ -309,44 +309,7 @@ func (user *userTbl) Verify(u *JsUser) bool {
   }
 }
 
-func (user *userTbl) SetActive(u string) bool {
-  o := orm.NewOrm()
-  o.Using("default")
 
-  usr := User{Username: u}
-  err := o.Read(&usr, "Username")
-
-  if err == orm.ErrNoRows || err == orm.ErrMissPK {
-    return false
-  } else {
-    usr.Isactive = 1
-    if _, err = o.Update(&usr); err == nil {
-      return true
-    } else {
-      return false
-    }
-  }
-
-}
-
-func (user *userTbl) SetUnActive(u string) bool {
-  o := orm.NewOrm()
-  o.Using("default")
-
-  usr := User{Username: u}
-  err := o.Read(&usr, "Username")
-
-  if err == orm.ErrNoRows || err == orm.ErrMissPK {
-    return false
-  } else {
-    usr.Isactive = 0
-    if _, err = o.Update(&usr); err == nil {
-      return true
-    } else {
-      return false
-    }
-  }
-}
 
 /***************************************************
  * userinfo table
