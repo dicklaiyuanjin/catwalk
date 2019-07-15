@@ -9,9 +9,53 @@ type AppModel struct {
   Setting *setting
   Captcha *captchaTool
   Msg *msgTool
+  Rpl *rplTool
 }
 
 var App AppModel
+/***********************************************
+ * rpl:reply tool
+ **********************************************/
+type rplTool struct {
+  name string
+}
+
+func (rt *rplTool) Check(r *JsRpl) bool {
+  ok := Crud.Invitation.Exist(r.Obj, r.Me)
+  if !ok { return false }
+
+  ok = Crud.Invitation.Delete(r.Obj, r.Me)
+  if !ok { return false }
+
+  Crud.Invitation.Delete(r.Me, r.Obj)
+
+  return true
+}
+
+func (rt *rplTool) AddFri(r *JsRpl) bool {
+    ok := Crud.FriendList.Insert(&JsFl{
+      Username: r.Me,
+      Friusername: r.Obj,
+    })
+    if !ok { return false }
+
+    return true
+}
+
+func (rt *rplTool) Marshal(src string) ([]byte, bool) {
+  Src := JsUif{Username: src}
+  ok := Crud.Uif.Read(&Src, "Username")
+  if !ok { return nil, false }
+
+  ws := WsData{
+    Code: 2,
+    Fif: Src,
+  }
+
+  data, ok := CwJSON.Marshal(ws)
+  return data, ok
+}
+
 /***********************************************
  * msg tool
  **********************************************/

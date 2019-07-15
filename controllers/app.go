@@ -14,11 +14,13 @@ func rToI(this *AppController) {
 }
 
 func (this *AppController) App() {
-  usr := this.GetSession("username").(string)
-  if usr == "" {
+  v := this.GetSession("username")
+  if v == nil  {
     rToI(this)
     return
   }
+
+  usr := v.(string)
 
   //setting part
   var userinfo models.JsUif
@@ -74,9 +76,8 @@ func (this *AppController) AppSettingSignout() {
   //注销session
   if this.GetSession("username") != nil {
     this.DestroySession()
-    this.ServeJSON()
   }
-
+  this.ServeJSON()
 }
 
 func (this *AppController) AppSettingEdit() {

@@ -114,16 +114,7 @@ editbtn.addEventListener('click', editbtn_click_handler , false);
  * signout btn
  */
 function signout_su_func(xhr) {
-  var obj = JSON.parse(xhr.responseText);
-  switch (obj.state) {
-    case 0:
-      var hint = document.getElementById("hint");
-      hint.innerHTML = 'sign out fail, please ask for administrator...';
-      break;
-    case 1:
-      document.location.href = "/";
-      break;
-  }
+  document.location.href = "/"; 
 }
 
 function signoutbtn_click_handler() {

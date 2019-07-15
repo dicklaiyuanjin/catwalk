@@ -118,7 +118,9 @@ func (d *DataModel) Handler(data []byte, hub *HubModel) bool {
 
   return false
 }
-
+/******************************************
+ * ivtt handler
+ *****************************************/
 func (d *DataModel) Ivtt(i *JsIvtt, data []byte, hub *HubModel) bool {
   ok := Crud.User.Exist(i.Sender) && Crud.User.Exist(i.Receiver)
   if !ok { return false }
@@ -141,39 +143,24 @@ func (d *DataModel) Ivtt(i *JsIvtt, data []byte, hub *HubModel) bool {
   return true
 }
 
+/*********************************************
+ * reply handler
+ ********************************************/
 func (d *DataModel) Rpl(r *JsRpl, data []byte, hub *HubModel) bool {
-  //1.查看是否有这么一条好友邀请
-  //1.1若有，则删除，继续下一步（2）
-  //1.2否则，返回错误信息
-  ok := Crud.Invitation.Exist(r.Obj, r.Me)
+  ok := App.Rpl.Check(r)
   if !ok { return false }
 
-  ok = Crud.Invitation.Delete(r.Obj, r.Me)
-  if !ok { return false }
-
-  //另一侧的删除
-  Crud.Invitation.Delete(r.Me, r.Obj)
-
-  //2.查看回复是否同意邀请
-  //2.1同意邀请，则为双方添加好友列表，并且生成双方用户信息作为好友信息互发，继续下一步（3）
-  //2.2否则，跳转到（3）
   if r.Attitude == "agree" {
-    ok = Crud.FriendList.Insert(&JsFl{
-      Username: r.Me,
-      Friusername: r.Obj,
-    })
+    ok := App.Rpl.AddFri(r)
     if !ok { return false }
 
-    //Me to Obj
     ok = d.SendFif(r.Me, r.Obj, hub)
     if !ok { return false }
 
-    //Obj to Me
     ok = d.SendFif(r.Obj, r.Me, hub)
     if !ok { return false}
   }
 
-  //发送reply给对方，让对方获悉自己的邀请是否成功
   v, ok := hub.Exist(r.Obj)
   if !ok { return false }
 
@@ -181,29 +168,20 @@ func (d *DataModel) Rpl(r *JsRpl, data []byte, hub *HubModel) bool {
   return true
 }
 
-//将src的info发送给obj在线用户
 func (d *DataModel) SendFif(src string, obj string, hub *HubModel) bool {
-  Src := JsUif{Username: src}
-  ok := Crud.Uif.Read(&Src, "Username")
-  if !ok { return false }
-
-  ws := WsData{
-    Code: 2,
-    Fif: Src,
-  }
-
-  data, ok := CwJSON.Marshal(ws)
+  data, ok := App.Rpl.Marshal(src)
   if !ok { return false }
 
   v, ok := hub.Exist(obj)
-  if !ok { return false }
-
-  fmt.Println("fif!!!!!!!!!!!!!!!!: ", ws.Fif.Username);
+  if !ok { return false } 
 
   v.WriteMessage(1, data)
   return true
 }
 
+/**************************************************
+ * msg handler
+ *************************************************/
 func (d *DataModel) Msg(m *JsMsg, data []byte, hub *HubModel) bool {
   ok := App.Msg.CheckAndInsert(m)
   if !ok { return false }
