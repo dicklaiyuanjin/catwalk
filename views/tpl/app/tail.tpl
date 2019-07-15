@@ -1,3 +1,7 @@
+    </div><!-- end div#app -->
+    <div id="app-room" class="appshow">
+      {{template "tpl/app/room.tpl" .}}
+    </div>
     <script src="/static/js/app/basic.js"></script>
     <script src="/static/js/app/setting.js"></script>
     <!-- jQuery (Bootstrap 的所有 JavaScript 插件都依赖 jQuery，所以必须放在前边) -->
