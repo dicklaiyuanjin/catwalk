@@ -1,6 +1,6 @@
 $(document).ready(function(){ 
 
-  function ivttWebsocket() {
+  function Websocket() {
     const socket = new WebSocket('ws://' + window.location.host + '/ws/join?username=' + $('#username').val());
     
     socket.onmessage = function (event) {
@@ -23,6 +23,9 @@ $(document).ready(function(){
       $('#invite-message').val(""); 
       socket.send(data);
     });
+
+    //为所有的friroom和frinfo添加事件
+
 
        
   }
@@ -115,6 +118,7 @@ $(document).ready(function(){
   function rec_fif(data, socket) {
     if (!isFriExist(data.username)) {
       $("#frimain").append(newFriBox(data));
+      //收到好友信息后，应该建立相应的friroom和frinfo
     }
   }
 
@@ -169,7 +173,7 @@ $(document).ready(function(){
 
 
   recEnvelopeCtlr(); 
-  ivttWebsocket();
+  Websocket();
 
 
 

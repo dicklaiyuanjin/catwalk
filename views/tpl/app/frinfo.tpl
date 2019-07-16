@@ -1,7 +1,7 @@
-<div id="fri1-info" class="app-active frinfo">
+<div id="fri1-info" class="app-unactive frinfo">
   <div class="container-fluid">
     <div class="row">
-      <div class="col-sm-offset-2 col-sm-8 col-md-offset-3 col-md-6">
+      <div class="col-sm-offset-2 col-sm-8 col-md-offset-3 col-md-6 col-lg-offset-4 col-lg-4">
         
         <div id="fri1-info-brand" class="row frinfo-brand">
           <div id="fri1-info-icon" class="col-xs-2">

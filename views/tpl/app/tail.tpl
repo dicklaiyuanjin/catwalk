@@ -1,8 +1,8 @@
     </div><!-- end div#app -->
-    <div id="app-room" class="apphide">
+    <div id="app-room" class="appshow">
       {{template "tpl/app/room.tpl" .}}
     </div>
-    <div id="app-frinfo" class="appshow">
+    <div id="app-frinfo" class="apphide">
       {{template "tpl/app/frinfo.tpl" .}}
     </div>
 
