@@ -10,9 +10,37 @@ type AppModel struct {
   Captcha *captchaTool
   Msg *msgTool
   Rpl *rplTool
+  Del *delTool
 }
 
 var App AppModel
+/********************************************
+ * del: delete friend tool
+ *******************************************/
+type delTool struct {
+  name string
+}
+
+func (dt *delTool) CheckAndDel(d *JsDel) bool {
+  ok := (Crud.User.Exist(d.Sender) && Crud.User.Exist(d.Exfri))
+  if !ok { return false }
+
+  fl := JsFl{
+    Username: d.Sender,
+    Friusername: d.Exfri,
+  }
+
+  ok = Crud.FriendList.ExistList(&fl)
+  if !ok { return false }
+
+  ok = Crud.FriendList.Delete(&fl)
+  if !ok { return false }
+
+  return true
+}
+
+
+
 /***********************************************
  * rpl:reply tool
  **********************************************/
@@ -33,13 +61,12 @@ func (rt *rplTool) Check(r *JsRpl) bool {
 }
 
 func (rt *rplTool) AddFri(r *JsRpl) bool {
-    ok := Crud.FriendList.Insert(&JsFl{
-      Username: r.Me,
-      Friusername: r.Obj,
-    })
-    if !ok { return false }
-
-    return true
+  ok := Crud.FriendList.Insert(&JsFl{
+    Username: r.Me,
+    Friusername: r.Obj,
+  })
+  if !ok { return false }
+  return true
 }
 
 func (rt *rplTool) Marshal(src string) ([]byte, bool) {

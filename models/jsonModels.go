@@ -32,6 +32,8 @@ func (cj *CwJSONModel) Marshal (v interface{}) ([]byte, bool) {
  * 0: Ivtt(invitation)
  * 1: Rpl(reply)
  * 2: fif(friendinfo)
+ * 3: Msg(message)
+ * 4: Del(delete friend)
  ********************************************************/
 type WsData struct {
   Code int `json:"code"`
@@ -39,6 +41,7 @@ type WsData struct {
   Rpl JsRpl `json:"rpl"`
   Fif JsUif `json:"fif"`
   Msg JsMsg `json:"msg"`
+  Del JsDel `json:"del"`
 }
 
 
@@ -125,3 +128,19 @@ type JsMsg struct {
   Content string `json:"content"`
   Sendtime string `json:"sendtime"`
 }
+
+/*******************************************
+ * JsDel(Del: delete friend)
+ ******************************************/
+type JsDel struct {
+  Sender string `json:"sender"`
+  Exfri string `json:"exfri"`
+}
+
+
+
+
+
+
+
+

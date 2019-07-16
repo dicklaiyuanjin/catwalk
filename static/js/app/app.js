@@ -35,7 +35,8 @@ $(document).ready(function(){
    * 0: invitation
    * 1: reply
    * 2: friendinfo
-   * 3: Msg
+   * 3: msg
+   * 4: del(delete)
    */
   function InitData(data, t) {
     var ws = {
@@ -62,6 +63,10 @@ $(document).ready(function(){
         receiver: "",
         content: "",
         sendtime: ""
+      },
+      del: {
+        sender: "",
+        exfri: "",
       }
    };
 
@@ -78,6 +83,8 @@ $(document).ready(function(){
     case 3:
       ws.msg = data;
       break;
+    case 4:
+      ws.del = data;
     }
     return JSON.stringify(ws);
   }
@@ -96,7 +103,14 @@ $(document).ready(function(){
     case 3:
       rec_msg(data.msg, socket);
       break;
+    case 4:
+      rec_del(data.del, socket);
+      break;
     }
+  }
+
+  function rec_del(data, socket) {
+    console.log("rec.del: ", data);
   }
 
   function rec_ivtt(data, socket) {

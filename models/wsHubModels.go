@@ -114,6 +114,8 @@ func (d *DataModel) Handler(data []byte, hub *HubModel) bool {
     return d.Rpl(&ws.Rpl, data, hub)
   case 3:
     return d.Msg(&ws.Msg, data, hub)
+  case 4:
+    return d.Del(&ws.Del, data, hub)
   }
 
   return false
@@ -173,7 +175,7 @@ func (d *DataModel) SendFif(src string, obj string, hub *HubModel) bool {
   if !ok { return false }
 
   v, ok := hub.Exist(obj)
-  if !ok { return false } 
+  if !ok { return false }
 
   v.WriteMessage(1, data)
   return true
@@ -194,3 +196,27 @@ func (d *DataModel) Msg(m *JsMsg, data []byte, hub *HubModel) bool {
 
   return true
 }
+
+/************************************************
+ * del handler(delete friend)
+ ***********************************************/
+func (dm *DataModel) Del(d *JsDel, data []byte, hub *HubModel) bool {
+  ok := App.Del.CheckAndDel(d)
+  if !ok { return false }
+
+  v, ok := hub.Exist(d.Sender)
+  if !ok { return false }
+  v.WriteMessage(1, data)
+
+  v, ok = hub.Exist(d.Exfri)
+  if !ok { return false }
+  v.WriteMessage(1, data)
+
+  return true
+
+
+}
+
+
+
+
