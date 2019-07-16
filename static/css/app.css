@@ -1,3 +1,44 @@
+/*************************************
+* fri-info
+*************************************/
+.frinfo-brand {
+  padding: 15px 0 10px 0;
+}
+
+.frinfo-content {
+  padding: 20px 35px; 
+  border-top-style: solid;
+  border-top-color: rgba(82,168,236,.8);
+  border-top-width: 1px;
+  border-bottom-style: solid;
+  border-bottom-color: rgba(82,168,236,.8);
+  border-bottom-width: 1px;
+}
+
+.frinfo-img:hover {
+  border-color: rgba(82,168,236,.8);
+  outline: 0;
+  box-shadow: 0 0 8px rgba(82,168,236,.6);
+  cursor: pointer;
+}
+
+.frinfo-content {
+  font-size: 5vw;
+}
+
+.frinfo-content>div {
+  margin-bottom: 15px;
+}
+
+@media (min-width: 768px) {
+  .frinfo-content {
+    font-size: 2vw;
+  }
+}
+
+/******************** 
+* friroom app-room
+*********************/
 .friroom {
   height: 100%;
 }
@@ -142,6 +183,10 @@
   cursor: pointer;
 }
 
+
+/***********************************************
+* global app
+***********************************************/
 .app-active {
   display: block;
 }
@@ -158,6 +203,10 @@
   display: block;
 }
 
+
+/****************************************
+* setting and invitation
+****************************************/
 #setting-content {
   background-color: #fff;
 }
@@ -184,6 +233,11 @@
   background-color: #fff;
 }
 
+
+
+/************************************************
+* chatroom:fri list
+************************************************/
 .myarrow {
   float: right;
 }
