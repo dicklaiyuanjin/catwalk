@@ -24,7 +24,7 @@
   </head>
 
   <body>
-    <div id="app" class="apphide">
+    <div id="app" class="appshow">
       <nav class="navbar navbar-default">
         <div class="container-fluid">
   

@@ -1,5 +1,5 @@
 {{range .Fm}}
-<div id="{{.Friusername}}-room" class="app-active friroom">
+<div id="{{.Friusername}}-room" class="app-unactive friroom">
   <div class="container-fluid friwrapper">
     <div class="row frimid">
       <div class="frinner col-sm-offset-2 col-sm-8 col-md-offset-3 col-md-6 col-lg-offset-4 col-lg-4">

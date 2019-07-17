@@ -1,5 +1,5 @@
     </div><!-- end div#app -->
-    <div id="app-room" class="appshow">
+    <div id="app-room" class="apphide">
       {{template "tpl/app/room.tpl" .}}
     </div>
     <div id="app-frinfo" class="apphide">

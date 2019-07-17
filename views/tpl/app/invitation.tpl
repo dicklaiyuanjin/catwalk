@@ -1,6 +1,6 @@
 <div class="container-fluid">
   <div class="row">
-    <div class="col-xs-offset-1 col-xs-10 col-sm-offset-3 col-sm-6">
+    <div class="col-sm-offset-2 col-sm-8 col-md-offset-3 col-md-6 col-lg-offset-4 col-lg-4">
       <ul class="list-group">
         <li class="list-group-item">
           <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Invitation Envelope

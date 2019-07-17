@@ -1,6 +1,6 @@
 <div class="container-fluid">
   <div class="row">
-    <div id="setting-content" class="col-xs-offset-1 col-xs-10 col-sm-offset-3 col-sm-6">
+    <div id="setting-content" class="col-sm-offset-2 col-sm-8 col-md-offset-3 col-md-6 col-lg-offset-4 col-lg-4">
       <form class="form-horizontal" id="setting-form">
         <div class="form-group">
           <div id="icon-img-wrapper" class="col-xs-offset-4 col-xs-4 col-sm-offset-4 col-sm-4">
