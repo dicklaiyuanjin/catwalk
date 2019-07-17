@@ -181,16 +181,125 @@ $(document).ready(function(){
       recEnvelope(sdrname);
     }
   }
+ 
+  /*******************************
+  * fribox
+  *******************************/
+  function clickFribox(friname) {
+    $("#app").attr("class", "apphide");
+    $("#app-room").attr("class", "appshow");
+    $("#app-frinfo").attr("class", "apphide");
+
+    var frirooms = document.getElementsByClassName("friroom");
+    var temp1
+    var temp2
+    for (var i = 0; i < frirooms.length; ++i) {
+      temp1 = frirooms[i].getAttribute('id');
+      temp1 = temp1.slice(0, -5);
+      if (friname == temp1) {
+        frirooms[i].setAttribute('class', 'app-active friroom');
+      } else {
+        frirooms[i].setAttribute('class', 'app-unactive friroom');
+      }
+    }
+
+    $("#" + friname + "-box-icon>img:first").attr("class", "fribox-img img-circle img-responsive");
+  }
+
+  function FriboxListen(name) {
+    $('#' + name + "-box").click(function(){
+      clickFribox(name);
+    });
+  }
+
+  function initFribox() {
+    var friboxes = document.getElementsByClassName("fribox");
+    var temp;
+    for (var i = 0; i < friboxes.length; ++i) {
+      temp = friboxes[i].getAttribute('id');
+      temp = temp.slice(0, -4); // getFriname
+      FriboxListen(temp);
+    }
+  }
+
+  /**********************************************
+  * friroom
+  **********************************************/
+  function clickRoomBack(name) {
+    $('#' + name + "-room").attr('class', 'app-unactive friroom');
+    $('#app-room').attr('class', 'apphide');
+    $('#app').attr('class', 'appshow');
+  }
+
+  function clickRoomIcon(name) {
+    $('#' + name + "-room").attr('class', 'app-unactive friroom');
+    $('#app-room').attr('class', 'apphide');
+    $('#app-frinfo').attr('class', 'appshow');
+    $('#' + name + '-info').attr('class', 'app-active frinfo');
+  }
+
+  function FriroomListen(name) {
+    $("#" + name + "-room-back").click(function(){
+      clickRoomBack(name);
+    });
+
+    $("#" + name + "-room-icon").click(function(){
+      clickRoomIcon(name);
+    });
+  }
+
+  function initFriroom() {
+    var frirooms = document.getElementsByClassName("friroom");
+    var temp;
+    for (var i = 0; i < frirooms.length; ++i) {
+     temp = frirooms[i].getAttribute('id');
+     temp = temp.slice(0, -5);
+     FriroomListen(temp);
+    }
+  }
   
-
+  /*********************************************************
+  * frinfo
+  *********************************************************/
   
+  function clickInfoBack(name) {
+    $('#' + name + '-info').attr('class', 'app-unactive frinfo');
+    $('#app-frinfo').attr('class', 'apphide');
+    $('#app-room').attr('class', 'appshow');
+    $('#' + name + '-room').attr('class', 'app-active friroom');
+
+  }
+
+  function FrinfoListen(name) {
+    $('#' + name + '-info-back').click(function(){
+      clickInfoBack(name);
+    });
+  }
+
+  function initFrinfo() {
+    var frinfos = document.getElementsByClassName("frinfo");
+    var temp;
+    for (var i = 0; i < frinfos.length; ++i) {
+      temp = frinfos[i].getAttribute('id');
+      temp = temp.slice(0, -5);
+      FrinfoListen(temp);
+    }
+  }
 
 
+  /*********************************
+  * main
+  *********************************/
+  initFrinfo();
+  initFriroom();
+  initFribox();
   recEnvelopeCtlr(); 
   Websocket();
 
 
-
+  /************************************
+  * helper
+  ************************************/
   function isSenderExist(sdr) {
     return $("#" + sdr).length != 0;
   }
