@@ -40,6 +40,28 @@ func (mt *msgTbl) Insert(m *JsMsg) bool {
   return false
 }
 
+//get chat info from a and b, order by sendtime asc
+func (mt *msgTbl) Readab(a string, b string, ml *[]JsMsg) bool {
+  o := orm.NewOrm()
+  o.Using("default")
+
+  var ms []Msg
+  _, err := o.Raw("SELECT * FROM msg WHERE (sender=? AND receiver=?) OR (sender=? AND receiver=?) ORDER BY sendtime ASC", a, b, b, a).QueryRows(&ms)
+
+  if err != nil { return false }
+
+  for _, v := range ms {
+    item := JsMsg{
+      Sender: v.Sender,
+      Receiver: v.Receiver,
+      Content: v.Content,
+      Sendtime: v.Sendtime,
+    }
+    *ml = append(*ml, item)
+  }
+  return true
+}
+
 
 /************************************************************************
  * friendlist table

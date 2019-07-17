@@ -11,9 +11,55 @@ type AppModel struct {
   Msg *msgTool
   Rpl *rplTool
   Del *delTool
+  Fif *fifTool
 }
 
 var App AppModel
+/*********************************************
+ * fif:friendinfo
+ ********************************************/
+type fifTool struct {
+  name string
+}
+
+//chatroom part
+//friboxs section
+//先获取friendlist，根据好友用户名查其详细信息
+//获取friendinfolist，发送到chatroom中显示
+//将friendinfo和相应的msg绑定形成新的数据结构，方便应用在模板
+func (ft *fifTool) ReadListWithMsg(username string, fm *[]JsUifWithFriMsg) bool {
+  var frilist []JsFl
+  ok := Crud.FriendList.ReadList(&frilist, username)
+  if !ok { return false }
+
+  var fiflist []JsUif
+  ok = Crud.Uif.ReadFifList(&fiflist, &frilist)
+  if !ok { return false }
+
+  for _, fri := range fiflist {
+    var msglist []JsMsg
+    ok = Crud.Msg.Readab(username, fri.Username, &msglist)
+    if !ok { return false }
+
+    item := JsUifWithFriMsg{
+      Username: username,
+      Friusername: fri.Username,
+      Frinickname: fri.Nickname,
+      Friemail: fri.Email,
+      Frimotto: fri.Motto,
+      Friicon: fri.Icon,
+      Msg: msglist,
+    }
+
+    *fm = append(*fm, item)
+  }
+
+  return true
+
+}
+
+
+
 /********************************************
  * del: delete friend tool
  *******************************************/
@@ -108,8 +154,6 @@ func (mt *msgTool) CheckAndInsert(m *JsMsg) bool {
 
   return true
 }
-
-
 
 /**********************************************
  * signform

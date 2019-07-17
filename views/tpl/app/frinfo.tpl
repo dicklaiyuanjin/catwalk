@@ -1,40 +1,41 @@
-<div id="fri1-info" class="app-unactive frinfo">
+{{range .Fm}}
+<div id="{{.Friusername}}-info" class="app-unactive frinfo">
   <div class="container-fluid">
     <div class="row">
       <div class="col-sm-offset-2 col-sm-8 col-md-offset-3 col-md-6 col-lg-offset-4 col-lg-4">
         
-        <div id="fri1-info-brand" class="row frinfo-brand">
-          <div id="fri1-info-icon" class="col-xs-2">
-            <img src="/static/img/icon.png" class="frinfo-img img-circle img-responsive" alt="fri1-info-icon">
+        <div id="{{.Friusername}}-info-brand" class="row frinfo-brand">
+          <div id="{{.Friusername}}-info-icon" class="col-xs-2">
+            <img src="{{.Friicon}}" class="frinfo-img img-circle img-responsive" alt="{{.Friusername}}-info-icon">
           </div>
-          <div id="fri1-info-back" class="col-xs-offset-8 col-xs-2">
+          <div id="{{.Friusername}}-info-back" class="col-xs-offset-8 col-xs-2">
             <img src="/static/img/back.png" class="frinfo-img img-circle img-responsive" alt="back-icon">
           </div>
         </div>
 
-        <div id="fri1-info-content" class="row frinfo-content text-center">
-          <div id="fri1-info-username" class="row">
+        <div id="{{.Friusername}}-info-content" class="row frinfo-content text-center">
+          <div id="{{.Friusername}}-info-username" class="row">
             <label class="col-sm-2 control-label">Username</label>
-            <p id="fri1-info-username-ct" class="col-sm-10">testuser</p>
+            <p id="{{.Friusername}}-info-username-ct" class="col-sm-10">{{.Friusername}}</p>
           </div>
 
-          <div id="fri1-info-nickname" class="row">
+          <div id="{{.Friusername}}-info-nickname" class="row">
             <label class="col-sm-2 control-label">Nickname</label>
-            <p id="fri1-info-nickname-ct" class="col-sm-10">cat111</p>
+            <p id="{{.Friusername}}-info-nickname-ct" class="col-sm-10">{{.Frinickname}}</p>
           </div>
 
-          <div id="fri1-info-email" class="row">
+          <div id="{{.Friusername}}-info-email" class="row">
             <label class="col-sm-2 control-label">Email</label>
-            <p id="fri1-info-email-ct" class="col-sm-10">catcool@qq.com</p>
+            <p id="{{.Friusername}}-info-email-ct" class="col-sm-10">{{.Friemail}}</p>
           </div>
 
-          <div id="fri1-info-motto" class="row">
+          <div id="{{.Friusername}}-info-motto" class="row">
             <label class="col-sm-2 control-label">Motto</label>
-            <p id="fri1-info-motto-ct" class="col-sm-10">everything gonna change</p>
+            <p id="{{.Friusername}}-info-motto-ct" class="col-sm-10">{{.Frimotto}}</p>
           </div>
 
-          <div id="fri1-info-delete" class="row">
-            <button id="fri1-info-delete-btn" class="col-sm-offset-2 col-sm-8 btn btn-danger">Delete</button>
+          <div id="{{.Friusername}}-info-delete" class="row">
+            <button id="{{.Friusername}}-info-delete-btn" class="col-sm-offset-2 col-sm-8 btn btn-danger">Delete</button>
           </div>
         </div>
       
@@ -42,3 +43,4 @@
     </div>
   </div>
 </div>
+{{end}}

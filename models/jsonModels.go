@@ -137,8 +137,18 @@ type JsDel struct {
   Exfri string `json:"exfri"`
 }
 
-
-
+/*******************************************
+ * JsUifWithFriMsg
+ ******************************************/
+type JsUifWithFriMsg struct{
+  Username string
+  Friusername string
+  Frinickname string
+  Friemail string
+  Frimotto string
+  Friicon template.URL
+  Msg []JsMsg
+}
 
 
 

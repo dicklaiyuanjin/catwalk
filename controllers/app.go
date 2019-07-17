@@ -48,6 +48,16 @@ func (this *AppController) App() {
   //friboxs section
   //先获取friednlist，根据好友用户名查其详细信息
   //获取friendinfo列表，发送到chatroom中显示
+  var fm []models.JsUifWithFriMsg
+  ok = models.App.Fif.ReadListWithMsg(usr, &fm)
+  if !ok {
+    rToI(this)
+    return
+  }
+
+  this.Data["Fm"] = fm
+
+  /*
   var frilist []models.JsFl
   ok = models.Crud.FriendList.ReadList(&frilist, userinfo.Username)
   if !ok {
@@ -63,6 +73,7 @@ func (this *AppController) App() {
   }
 
   this.Data["Fiflist"] = fiflist
+  */
 
   this.TplName = "app.tpl"
 }
