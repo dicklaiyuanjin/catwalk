@@ -24,11 +24,41 @@ $(document).ready(function(){
       socket.send(data);
     });
 
-    //为所有的friroom和frinfo添加事件
+    function initFriroom() {
+      var frirooms = document.getElementsByClassName("friroom");
+      var temp;
+      for (var i = 0; i < frirooms.length; ++i) {
+       temp = frirooms[i].getAttribute('id');
+       temp = temp.slice(0, -5);
+       FriroomListen(temp, socket);
+      }
+    }
+  
+    function initFribox() {
+      var friboxes = document.getElementsByClassName("fribox");
+      var temp;
+      for (var i = 0; i < friboxes.length; ++i) {
+        temp = friboxes[i].getAttribute('id');
+        temp = temp.slice(0, -4); // getFriname
+        FriboxListen(temp, socket);
+      }
+    }
 
-
-       
-  }
+    function initFrinfo() {
+      var frinfos = document.getElementsByClassName("frinfo");
+      var temp;
+      for (var i = 0; i < frinfos.length; ++i) {
+        temp = frinfos[i].getAttribute('id');
+        temp = temp.slice(0, -5);
+        FrinfoListen(temp, socket);
+      }
+    }
+    
+    initFrinfo();
+    initFriroom();
+    initFribox();
+    
+  }//end Websocket()
  
   /*
    * t is data type
@@ -138,6 +168,18 @@ $(document).ready(function(){
 
   function rec_msg(data, socket){
     console.log("rec msg data: ", data);
+    var usr = $("#username").val();
+    var friname = "";
+    if(data.sender == usr) {
+      //发送者为本人，放在相应的friroom中
+      friname = data.receiver;
+      $('#' + friname + "-room-msglist").append(newRightMsgBox(usr, fri));
+    } else {
+      //发送者为朋友，放到相应的friroom中
+      friname = data.sender;
+      $('#' + friname + "-room-msglist").append(newLeftMsgBox(usr, fri));
+
+    }
   }
 
   /**********************************
@@ -154,7 +196,7 @@ $(document).ready(function(){
       var data = InitData({
         me: $("#username").val(),
         obj: sdrname,
-        Attitude: att
+        attitude: att
       }, 1);
 
       socket.send(data);
@@ -185,14 +227,14 @@ $(document).ready(function(){
   /*******************************
   * fribox
   *******************************/
-  function clickFribox(friname) {
+  function clickFribox(friname, socket) {
     $("#app").attr("class", "apphide");
     $("#app-room").attr("class", "appshow");
     $("#app-frinfo").attr("class", "apphide");
 
     var frirooms = document.getElementsByClassName("friroom");
-    var temp1
-    var temp2
+    var temp1;
+    var temp2;
     for (var i = 0; i < frirooms.length; ++i) {
       temp1 = frirooms[i].getAttribute('id');
       temp1 = temp1.slice(0, -5);
@@ -203,66 +245,62 @@ $(document).ready(function(){
       }
     }
 
+    $('#' + friname + "-room-btn").click(function(){
+      var data = InitData({
+        sender: $("#username").val(),
+        receiver: friname,
+        content: $("#" + friname + "-room-input").val(),
+        sendtime: new Date().Format("yyyy-MM-dd hh:mm:ss") 
+      }, 3);
+
+      socket.send(data);
+      $("#" + friname + "-room-input").val("");
+    });
+
     $("#" + friname + "-box-icon>img:first").attr("class", "fribox-img img-circle img-responsive");
   }
 
-  function FriboxListen(name) {
+  function FriboxListen(name, socket) {
     $('#' + name + "-box").click(function(){
-      clickFribox(name);
+      clickFribox(name, socket);
     });
   }
 
-  function initFribox() {
-    var friboxes = document.getElementsByClassName("fribox");
-    var temp;
-    for (var i = 0; i < friboxes.length; ++i) {
-      temp = friboxes[i].getAttribute('id');
-      temp = temp.slice(0, -4); // getFriname
-      FriboxListen(temp);
-    }
-  }
+  
 
   /**********************************************
   * friroom
   **********************************************/
-  function clickRoomBack(name) {
+  function clickRoomBack(name, socket) {
     $('#' + name + "-room").attr('class', 'app-unactive friroom');
     $('#app-room').attr('class', 'apphide');
     $('#app').attr('class', 'appshow');
   }
 
-  function clickRoomIcon(name) {
+  function clickRoomIcon(name, socket) {
     $('#' + name + "-room").attr('class', 'app-unactive friroom');
     $('#app-room').attr('class', 'apphide');
     $('#app-frinfo').attr('class', 'appshow');
     $('#' + name + '-info').attr('class', 'app-active frinfo');
   }
 
-  function FriroomListen(name) {
+  function FriroomListen(name, socket) {
     $("#" + name + "-room-back").click(function(){
-      clickRoomBack(name);
+      clickRoomBack(name, socket);
     });
 
     $("#" + name + "-room-icon").click(function(){
-      clickRoomIcon(name);
+      clickRoomIcon(name, socket);
     });
   }
 
-  function initFriroom() {
-    var frirooms = document.getElementsByClassName("friroom");
-    var temp;
-    for (var i = 0; i < frirooms.length; ++i) {
-     temp = frirooms[i].getAttribute('id');
-     temp = temp.slice(0, -5);
-     FriroomListen(temp);
-    }
-  }
+  
   
   /*********************************************************
   * frinfo
   *********************************************************/
   
-  function clickInfoBack(name) {
+  function clickInfoBack(name, socket) {
     $('#' + name + '-info').attr('class', 'app-unactive frinfo');
     $('#app-frinfo').attr('class', 'apphide');
     $('#app-room').attr('class', 'appshow');
@@ -270,29 +308,18 @@ $(document).ready(function(){
 
   }
 
-  function FrinfoListen(name) {
+  function FrinfoListen(name, socket) {
     $('#' + name + '-info-back').click(function(){
-      clickInfoBack(name);
+      clickInfoBack(name, socket);
     });
   }
 
-  function initFrinfo() {
-    var frinfos = document.getElementsByClassName("frinfo");
-    var temp;
-    for (var i = 0; i < frinfos.length; ++i) {
-      temp = frinfos[i].getAttribute('id');
-      temp = temp.slice(0, -5);
-      FrinfoListen(temp);
-    }
-  }
+  
 
 
   /*********************************
   * main
   *********************************/
-  initFrinfo();
-  initFriroom();
-  initFribox();
   recEnvelopeCtlr(); 
   Websocket();
 
@@ -444,7 +471,30 @@ $(document).ready(function(){
     return invite;
   }
 
-});
+// 对Date的扩展，将 Date 转化为指定格式的String
+// 月(M)、日(d)、小时(h)、分(m)、秒(s)、季度(q) 可以用 1-2 个占位符，
+// 年(y)可以用 1-4 个占位符，毫秒(S)只能用 1 个占位符(是 1-3 位的数字)
+// 例子：
+// (new Date()).Format("yyyy-MM-dd hh:mm:ss.S") ==> 2006-07-02 08:09:04.423
+// (new Date()).Format("yyyy-M-d h:m:s.S")      ==> 2006-7-2 8:9:4.18
+Date.prototype.Format = function (fmt) {
+    var o = {
+        "M+": this.getMonth() + 1, //月份
+        "d+": this.getDate(), //日
+        "h+": this.getHours(), //小时
+        "m+": this.getMinutes(), //分
+        "s+": this.getSeconds(), //秒
+        "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+        "S": this.getMilliseconds() //毫秒
+    };
+    if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+    for (var k in o)
+    if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+    return fmt;
+}
+
+
+});//end jquery
 
 
 

@@ -189,10 +189,14 @@ func (d *DataModel) Msg(m *JsMsg, data []byte, hub *HubModel) bool {
   if !ok { return false }
 
   v, ok := hub.Exist(m.Receiver)
-  v.WriteMessage(1, data)
+  if ok {
+    v.WriteMessage(1, data)
+  }
 
   v, ok = hub.Exist(m.Sender)
-  v.WriteMessage(1, data)
+  if ok {
+    v.WriteMessage(1, data)
+  }
 
   return true
 }
