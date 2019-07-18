@@ -1,5 +1,5 @@
 # Catwalk
-* Catwalk is a toy (base on http, ajax, websocket)
+* Catwalk is a toy (base on beego)
 * For me, the object of creating this toy is to study building web application with golang
 * As we all known, building web app is not easy. It needs many skills as well as tools.
 * Up to now so far, it just implements user authentication(incomplete),  friend management, one-on-one chat
@@ -7,10 +7,8 @@
 # the skills and tools
 * [beego](github.com/astaxie/beego)
 * [go-sql-driver/mysql](github.com/go-sql-driver/mysql)
-* [gorilla]
-* [mojocn]
-* [crypto]
-* [image]
+* [gorilla/websocket](github.com/gorilla/websocket)
+* [mojocn/base64Captcha](github.com/mojocn/base64Captcha)
 
 # Foreword
 * keyword: MVC(Model–view–controller)
@@ -163,8 +161,12 @@ more: [router.go](routers/router.go)
 * this part handle websocket conn
 
 # views
-* this part will put an video.
-<iframe src="//player.bilibili.com/player.html?aid=59747476&cid=104074264&page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>
+* [video](https://www.bilibili.com/video/av59747476/)
+* I am not good at UI....so.....er......
+* the main app is single page app.
+* I use  jquery and bootstrap to build the front-end.
+
+
 
 
 
