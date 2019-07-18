@@ -13,7 +13,7 @@
 # Foreword
 * keyword: MVC(Model–view–controller)
 * this web app is not complete, there are still many bugs.
-
+![pickture](static/img/cat.png) 
 # models
 ## Data convention
 ```golang
