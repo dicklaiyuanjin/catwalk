@@ -1,8 +1,7 @@
 $(document).ready(function(){ 
 
-  function Websocket() {
+  function Websocket(callback_func) {      
     const socket = new WebSocket('ws://' + window.location.host + '/ws/join?username=' + $('#username').val());
-    
     socket.onmessage = function (event) {
       console.log("event.data: ", event.data)
       if (event.data != "") {
@@ -57,6 +56,7 @@ $(document).ready(function(){
     initFrinfo();
     initFriroom();
     initFribox();
+    callback_func(socket);
     
   }//end Websocket()
  
@@ -173,13 +173,16 @@ $(document).ready(function(){
     if(data.sender == usr) {
       //发送者为本人，放在相应的friroom中
       friname = data.receiver;
-      $('#' + friname + "-room-msglist").append(newRightMsgBox(usr, fri));
+      $('#' + friname + "-room-msglist").append(newMsgBox(data.content, "right"));
     } else {
       //发送者为朋友，放到相应的friroom中
       friname = data.sender;
-      $('#' + friname + "-room-msglist").append(newLeftMsgBox(usr, fri));
-
+      $('#' + friname + "-room-msglist").append(newMsgBox(data.content, "left"));
     }
+
+    var ta = document.getElementById(friname + "-room-msglist");
+    ta.scrollTop = ta.scrollHeight;
+    $("#" + friname + "-box-icon>img:first").attr("class", "fribox-img-rec fribox-img img-circle img-responsive");
   }
 
   /**********************************
@@ -192,6 +195,43 @@ $(document).ready(function(){
       $("#" + sendername + "-invite-content").slideToggle();
     });
 
+
+    var obj1 = {
+      sdrname: sendername,
+      att: "agree",
+      socket: socket,
+      removeEnvelope: function() {
+        var data = InitData({
+          me: $("#username").val(),
+          obj: this.sdrname,
+          attitude: this.att
+        }, 1);
+
+        this.socket.send(data);
+
+        var idname = "#" + this.sdrname + "-invite";
+        $(idname).remove();  
+      }
+    }
+    
+    var obj2 = {
+      sdrname: sendername,
+      att: "refuse",
+      socket: socket,
+      removeEnvelope: function() {
+        var data = InitData({
+          me: $("#username").val(),
+          obj: this.sdrname,
+          attitude: this.att
+        }, 1);
+
+        this.socket.send(data);
+
+        var idname = "#" + this.sdrname + "-invite";
+        $(idname).remove();  
+      }
+    }
+    /*
     function removeEnvelope(sdrname, att) {
       var data = InitData({
         me: $("#username").val(),
@@ -200,27 +240,26 @@ $(document).ready(function(){
       }, 1);
 
       socket.send(data);
-       
+
       var idname = "#" + sdrname + "-invite";
       $(idname).remove();
     }
-     
-    $("#" + sendername + "-agree").click(function(){
-      removeEnvelope(sendername, "agree"); 
-    });
+    */
     
-    $("#" + sendername + "-refuse").click(function(){ 
-      removeEnvelope(sendername, "refuse");
-    }); 
+
+
+    $("#" + sendername + "-agree").click(jQuery.proxy(obj1, "removeEnvelope"));
+    
+    $("#" + sendername + "-refuse").click(jQuery.proxy(obj2, "removeEnvelope")); 
   }
 
 
-  function recEnvelopeCtlr() {
+  function recEnvelopeCtlr(socket) {
     var recArr = $('#rec-envelope').children();
     var sdrname;
     for (var i = 0; i <recArr.length; ++i) {
       sdrname = recArr.eq(i).attr("id").slice(0, -7);
-      recEnvelope(sdrname);
+      recEnvelope(sdrname, socket);
     }
   }
  
@@ -252,7 +291,7 @@ $(document).ready(function(){
         content: $("#" + friname + "-room-input").val(),
         sendtime: new Date().Format("yyyy-MM-dd hh:mm:ss") 
       }, 3);
-
+      
       socket.send(data);
       $("#" + friname + "-room-input").val("");
     });
@@ -263,6 +302,9 @@ $(document).ready(function(){
   function FriboxListen(name, socket) {
     $('#' + name + "-box").click(function(){
       clickFribox(name, socket);
+      var ta = document.getElementById(name + "-room-msglist");
+      ta.scrollTop = ta.scrollHeight;
+      $("#" + name + "-box-icon>img:first").attr("class", "fribox-img img-circle img-responsive");
     });
   }
 
@@ -287,10 +329,12 @@ $(document).ready(function(){
   function FriroomListen(name, socket) {
     $("#" + name + "-room-back").click(function(){
       clickRoomBack(name, socket);
+      $("#" + name + "-box-icon>img:first").attr("class", "fribox-img img-circle img-responsive");
     });
 
     $("#" + name + "-room-icon").click(function(){
       clickRoomIcon(name, socket);
+      $("#" + name + "-box-icon>img:first").attr("class", "fribox-img img-circle img-responsive");
     });
   }
 
@@ -311,6 +355,8 @@ $(document).ready(function(){
   function FrinfoListen(name, socket) {
     $('#' + name + '-info-back').click(function(){
       clickInfoBack(name, socket);
+      var ta = document.getElementById(name + "-room-msglist");
+      ta.scrollTop = ta.scrollHeight;
     });
   }
 
@@ -320,8 +366,7 @@ $(document).ready(function(){
   /*********************************
   * main
   *********************************/
-  recEnvelopeCtlr(); 
-  Websocket();
+  Websocket(recEnvelopeCtlr);
 
 
   /************************************
@@ -471,27 +516,53 @@ $(document).ready(function(){
     return invite;
   }
 
-// 对Date的扩展，将 Date 转化为指定格式的String
-// 月(M)、日(d)、小时(h)、分(m)、秒(s)、季度(q) 可以用 1-2 个占位符，
-// 年(y)可以用 1-4 个占位符，毫秒(S)只能用 1 个占位符(是 1-3 位的数字)
-// 例子：
-// (new Date()).Format("yyyy-MM-dd hh:mm:ss.S") ==> 2006-07-02 08:09:04.423
-// (new Date()).Format("yyyy-M-d h:m:s.S")      ==> 2006-7-2 8:9:4.18
-Date.prototype.Format = function (fmt) {
-    var o = {
-        "M+": this.getMonth() + 1, //月份
-        "d+": this.getDate(), //日
-        "h+": this.getHours(), //小时
-        "m+": this.getMinutes(), //分
-        "s+": this.getSeconds(), //秒
-        "q+": Math.floor((this.getMonth() + 3) / 3), //季度
-        "S": this.getMilliseconds() //毫秒
-    };
-    if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
-    for (var k in o)
-    if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
-    return fmt;
-}
+
+  function newMsgBox(ct, dir) {
+    var row = document.createElement("div");
+    row.setAttribute("class", "row");
+
+    var outer = document.createElement("div");
+    var temp = "";
+    if (dir == "right") {
+      outer.setAttribute("class", "col-xs-offset-4 col-xs-8");
+    } else {
+      outer.setAttribute("class", "col-xs-8");
+    }
+    var mid = document.createElement("p");
+    mid.setAttribute("class", "text-" + dir + " my-msg");
+
+    var sp = document.createElement("span");
+    sp.innerHTML = ct;
+
+    mid.append(sp);
+    outer.append(mid);
+    row.append(outer);
+
+    return row;
+  }
+
+
+  // 对Date的扩展，将 Date 转化为指定格式的String
+  // 月(M)、日(d)、小时(h)、分(m)、秒(s)、季度(q) 可以用 1-2 个占位符，
+  // 年(y)可以用 1-4 个占位符，毫秒(S)只能用 1 个占位符(是 1-3 位的数字)
+  // 例子：
+  // (new Date()).Format("yyyy-MM-dd hh:mm:ss.S") ==> 2006-07-02 08:09:04.423
+  // (new Date()).Format("yyyy-M-d h:m:s.S")      ==> 2006-7-2 8:9:4.18
+  Date.prototype.Format = function (fmt) {
+      var o = {
+          "M+": this.getMonth() + 1, //月份
+          "d+": this.getDate(), //日
+          "h+": this.getHours(), //小时
+          "m+": this.getMinutes(), //分
+          "s+": this.getSeconds(), //秒
+          "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+          "S": this.getMilliseconds() //毫秒
+      };
+      if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+      for (var k in o)
+      if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+      return fmt;
+  }
 
 
 });//end jquery

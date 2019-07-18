@@ -6,7 +6,7 @@
       <div id="{{.Friusername}}-box" class="fribox col-xs-4 col-sm-3 col-md-2">
         <div id="{{.Friusername}}-box-content" class="fribox-content container-fluid">
           <div id="{{.Friusername}}-box-icon" class="row fribox-icon">
-            <img src="{{.Friicon}}" alt="{{.Friusername}}-icon" class="fribox-img-rec fribox-img img-circle img-responsive">
+            <img src="{{.Friicon}}" alt="{{.Friusername}}-icon" class="fribox-img img-circle img-responsive">
           </div>
   
           <div id="{{.Friusername}}-box-username" class="row fribox-username">
