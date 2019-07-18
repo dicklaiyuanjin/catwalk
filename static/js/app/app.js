@@ -162,7 +162,14 @@ $(document).ready(function(){
   function rec_fif(data, socket) {
     if (!isFriExist(data.username)) {
       $("#frimain").append(newFriBox(data));
+      FriboxListen(data.username, socket);
       //收到好友信息后，应该建立相应的friroom和frinfo
+      //建立完后添加相应的事件响应（callback）
+      $("#app-room").append(newFriroom(data));
+      FriroomListen(data.username, socket);
+
+      $("#app-frinfo").append(newFrinfo(data));
+      FrinfoListen(data.username, socket);
     }
   }
 
@@ -181,7 +188,9 @@ $(document).ready(function(){
     }
 
     var ta = document.getElementById(friname + "-room-msglist");
-    ta.scrollTop = ta.scrollHeight;
+    if (ta.scrollHeight != null) {
+      ta.scrollTop = ta.scrollHeight;
+    }
     $("#" + friname + "-box-icon>img:first").attr("class", "fribox-img-rec fribox-img img-circle img-responsive");
   }
 
@@ -539,6 +548,156 @@ $(document).ready(function(){
     row.append(outer);
 
     return row;
+  }
+
+
+
+
+  function cre_b(elm, attr_class, attr_id, innerHTML) {
+    var e = document.createElement(elm);
+    if (attr_class != null) {
+      e.setAttribute("class", attr_class);
+    }
+    if (attr_id != null) {
+      e.setAttribute("id", attr_id);
+    }
+    if (innerHTML != null) {
+      e.innerHTML = innerHTML;
+    }
+    return e;
+  }
+
+  function cre_img(attr_class, attr_id, attr_src, attr_alt) {
+    var e = document.createElement("img");
+    if (attr_class != null) {
+      e.setAttribute("class", attr_class);
+    }
+
+    if (attr_id != null) {
+      e.setAttribute("id", attr_id);
+    }
+
+    if(attr_src != null) {
+      e.setAttribute("src", attr_src);
+    }
+
+    if (attr_alt != null) {
+      e.setAttribute("alt", attr_alt);
+    }
+    return e;
+  }
+
+  function cre_input(attr_class, attr_id, attr_type, attr_ph, attr_val) {
+    var e = document.createElement("input");
+    if (attr_class != null) {
+      e.setAttribute("class", attr_class);
+    }
+    if (attr_id != null) {
+      e.setAttribute("id", attr_id);
+    }
+    if (attr_type != null) {
+      e.setAttribute("type", attr_type);
+    }
+    if (attr_ph != null) {
+      e.setAttribute("placeholder", attr_ph);
+    }
+    if (attr_val != null) {
+      e.setAttribute("value", attr_val);
+    }
+    return e;
+  }
+
+  function newFriroom(data) {
+    var b1 = cre_b("div", "app-unactive friroom", data.username + "-room");
+    var b11 = cre_b("div", "container-fluid friwrapper");
+    
+    var b111 = cre_b("div", "row frimid");
+    
+    var b1111 = cre_b("div", "frinner col-sm-offset-2 col-sm-8 col-md-offset-3 col-md-6 col-lg-offset-4 col-lg-4");
+    
+    var b11111 = cre_b("div", "row friroom-brand", data.username + "-room-brand");
+    
+    var b111111 = cre_b("div", "friroom-icon col-xs-2", data.username + "-room-icon");
+    var b1111111 = cre_img("img-circle img-responsive", null, data.icon, data.username + "-room-icon");
+    b111111.append(b1111111);
+    var b111112 = cre_b("div", "friroom-nick col-xs-8", data.username + "-room-nickname");
+    var b1111121 = cre_b("p", "text-muted", null, data.nickname);
+    b111112.append(b1111121);
+
+    var b111113 = cre_b("div", "friroom-back col-xs-2", data.username + "-room-back");
+    var b1111131 = cre_img("img-circle img-responsive", null, "/static/img/back.png", "back-icon");
+    b111113.append(b1111131);
+    b11111.append(b111111, b111112, b111113);
+
+    var b11112 = cre_b("div", "row friroom-msglist", data.username + "-room-msglist");
+    b1111.append(b11111, b11112);
+    b111.append(b1111);
+
+    var b112 = cre_b("div", "row friroom-edit col-sm-offset-2 col-sm-8 col-md-offset-3 col-md-6 col-lg-offset-4 col-lg-4", data.username + "-room-edit");
+    var b1121 = cre_b("div", "row");
+    var b11211 = cre_input("friroom-input col-xs-9", data.username + "-room-input", "text", "input something....");
+    var b11212 = cre_b("button", "friroom-btn col-xs-3 btn btn-default", data.username + "-room-btn", "Send");
+    b1121.append(b11211, b11212);
+    b112.append(b1121);
+
+    b11.append(b111, b112);
+    b1.append(b11);
+
+    return b1;
+  }
+
+  function newFrinfo(data) {
+    var b1 = cre_b("div", "app-unactive frinfo", data.username + "-info");
+    var b11 = cre_b("div", "container-fluid");
+    var b111 = cre_b("div", "row");
+    var b1111 = cre_b("div", "col-sm-offset-2 col-sm-8 col-md-offset-3 col-md-6 col-lg-offset-4 col-lg-4");
+    
+    var b11111 = cre_b("div", "row frinfo-brand", data.username + "-info-brand");
+    var b111111 = cre_b("div", "col-xs-2", data.username + "-info-icon");
+    var b1111111 = cre_img("frinfo-img img-circle img-responsive", null, data.icon, data.username + "-info-icon");
+    b111111.append(b1111111);
+    var b111112 = cre_b("div", "col-xs-offset-8 col-xs-2", data.username + "-info-back");
+    var b1111121 = cre_img("frinfo-img img-circle img-responsive", null, "/static/img/back.png", "back-icon");
+    b111112.append(b1111121);
+    b11111.append(b111111, b111112);
+
+    var b11112 = cre_b("div", "row frinfo-content text-center", data.username + "-info-content");
+    
+    var b111121 = cre_b("div", "row", data.username + "-info-username");
+    var b1111211 = cre_b("label", "col-sm-2 control-label", null, "Username");
+    var b1111212 = cre_b("p", "col-sm-10", data.username + "-info-username-ct", data.username);
+    b111121.append(b1111211);
+    b111121.append(b1111212);
+
+    var b111122 = cre_b("div", "row", data.username + "-info-nickname");
+    var b1111221 = cre_b("label", "col-sm-2 control-label", null, "Nickname");
+    var b1111222 = cre_b("p", "col-sm-10", data.nickname + "-info-nickname-ct", data.nickname);
+    b111122.append(b1111221);
+    b111122.append(b1111222);
+
+    var b111123 = cre_b("div", "row", data.username + "-info-email");
+    var b1111231 = cre_b("label", "col-sm-2 control-label", null, "Email");
+    var b1111232 = cre_b("p", "col-sm-10", data.username + "-info-email-ct", data.email);
+    b111123.append(b1111231);
+    b111123.append(b1111232);
+
+    var b111124 = cre_b("div", "row", data.username + "-info-motto");
+    var b1111241 = cre_b("label", "col-sm-2 control-label", null, "Motto");
+    var b1111242 = cre_b("p", "col-sm-10", data.username + "-info-motto-ct", data.motto);
+    b111124.append(b1111241);
+    b111124.append(b1111242);
+
+    var b111125 = cre_b("div", "row", data.username + "-info-delete");
+    var b1111251 = cre_b("button", "col-sm-offset-2 col-sm-8 btn btn-danger", data.username + "-info-delete-btn", "Delete");
+    b111125.append(b1111251);
+    b11112.append(b111121, b111122, b111123, b111124, b111125);
+    
+    b1111.append(b11111, b11112);
+    b111.append(b1111);
+    b11.append(b111);
+    b1.append(b11);
+
+    return b1;
   }
 
 
