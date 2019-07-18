@@ -164,7 +164,7 @@ more: [router.go](routers/router.go)
 
 # views
 * this part will put an video.
-
+<iframe src="//player.bilibili.com/player.html?aid=59747476&cid=104074264&page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>
 
 
 
