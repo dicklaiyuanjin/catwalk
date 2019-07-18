@@ -646,6 +646,7 @@ $(document).ready(function(){
     var b112 = cre_b("div", "row friroom-edit col-sm-offset-2 col-sm-8 col-md-offset-3 col-md-6 col-lg-offset-4 col-lg-4", data.username + "-room-edit");
     var b1121 = cre_b("div", "row");
     var b11211 = cre_input("friroom-input col-xs-9", data.username + "-room-input", "text", "input something....");
+    b11211.setAttribute("autocomplete", "off");
     var b11212 = cre_b("button", "friroom-btn col-xs-3 btn btn-default", data.username + "-room-btn", "Send");
     b1121.append(b11211, b11212);
     b112.append(b1121);

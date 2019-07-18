@@ -1,7 +1,7 @@
 {{template "tpl/head.tpl"}}
     <div class="jumbotron text-center">
       <h1>Welcome to Catwalk</h1>
-      <p>Catwalk is a project to implement an IM system.</p>
+      <p>Catwalk is a toy</p>
       <p>For me, the object of creating this project is to study building web application with golang.</p>
       <p>As we all known, building web app is not easy. It needs many skills as well as tools.</p>
       <p>

@@ -162,10 +162,8 @@ more: [router.go](routers/router.go)
 ## ws controller
 * this part handle websocket conn
 
-
 # views
-
-
+* this part will put an video.
 
 
 

@@ -25,21 +25,21 @@
         <div class="form-group">
           <label for="nickname" class="col-sm-2 control-label">nickname</label>
           <div class="col-sm-10">
-            <input type="text" class="form-control" id="nickname" readonly="readonly" value="{{.userinfo.Nickname}}">
+            <input autocomplete="off" type="text" class="form-control" id="nickname" readonly="readonly" value="{{.userinfo.Nickname}}">
           </div>
         </div>
         
         <div class="form-group">
           <label for="email" class="col-sm-2 control-label">e-mail</label>
           <div class="col-sm-10">
-            <input type="text" class="form-control" id="email" readonly="readonly" value="{{.userinfo.Email}}">
+            <input autocomplete="off" type="text" class="form-control" id="email" readonly="readonly" value="{{.userinfo.Email}}">
           </div>
         </div>
         
         <div class="form-group">
           <label for="motto" class="col-sm-2 control-label">motto</label>
           <div class="col-sm-10">
-            <input type="text" class="form-control" id="motto" readonly="readonly" value="{{.userinfo.Motto}}">
+            <input autocomplete="off" type="text" class="form-control" id="motto" readonly="readonly" value="{{.userinfo.Motto}}">
           </div>
         </div>
 

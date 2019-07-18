@@ -47,7 +47,7 @@
 
     <div id="{{.Friusername}}-room-edit" class="row friroom-edit col-sm-offset-2 col-sm-8 col-md-offset-3 col-md-6 col-lg-offset-4 col-lg-4">
       <div class="row">
-        <input type="text" id="{{.Friusername}}-room-input" class="friroom-input col-xs-9" placeholder="input something....">
+        <input autocomplete="off" type="text" id="{{.Friusername}}-room-input" class="friroom-input col-xs-9" placeholder="input something....">
         <button id="{{.Friusername}}-room-btn" class="friroom-btn col-xs-3 btn btn-default">Send</button>
       </div>
     </div>

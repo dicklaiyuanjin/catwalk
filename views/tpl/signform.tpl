@@ -11,13 +11,13 @@
             <div class="form-group">
               <label for="password" class="col-sm-2 control-label">Password</label>
               <div class="col-sm-10">
-                <input type="password" class="form-control" id="password" name="password" placeholder="Password...">
+                <input autocomplete="off" type="password" class="form-control" id="password" name="password" placeholder="Password...">
               </div>
             </div>
 <div class="form-group">
       <label for="captchainput" class="col-sm-2 control-label">Captcha</label>
       <div class="col-sm-5">
-        <input type="text" class="form-control" id="captchainput" placeholder="Captcha...">
+        <input autocomplete="off" type="text" class="form-control" id="captchainput" placeholder="Captcha...">
       </div>
      <div class="col-sm-5">
         <img id="captcha" src="{{.captcha}}" alt="Captcha" />
