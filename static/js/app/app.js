@@ -141,6 +141,7 @@ $(document).ready(function(){
 
   function rec_del(data, socket) {
     console.log("rec.del: ", data);
+    document.location.href = "/app";
   }
 
   function rec_ivtt(data, socket) {
@@ -366,6 +367,15 @@ $(document).ready(function(){
       clickInfoBack(name, socket);
       var ta = document.getElementById(name + "-room-msglist");
       ta.scrollTop = ta.scrollHeight;
+    });
+
+    $('#' + name + "-info-delete-btn").click(function(){
+      var data = InitData({
+        sender: $("#username").val(),
+        exfri: name
+      }, 4);
+
+      socket.send(data);
     });
   }
 

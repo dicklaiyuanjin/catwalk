@@ -59,7 +59,6 @@ func (ft *fifTool) ReadListWithMsg(username string, fm *[]JsUifWithFriMsg) bool 
 }
 
 
-
 /********************************************
  * del: delete friend tool
  *******************************************/
@@ -77,6 +76,9 @@ func (dt *delTool) CheckAndDel(d *JsDel) bool {
   }
 
   ok = Crud.FriendList.ExistList(&fl)
+  if !ok { return false }
+
+  ok = Crud.Msg.DeleteAb(d.Sender, d.Exfri)
   if !ok { return false }
 
   ok = Crud.FriendList.Delete(&fl)

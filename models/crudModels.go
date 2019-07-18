@@ -62,6 +62,17 @@ func (mt *msgTbl) Readab(a string, b string, ml *[]JsMsg) bool {
   return true
 }
 
+func (mt *msgTbl) DeleteAb(a string, b string) bool {
+  o := orm.NewOrm()
+  o.Using("default");
+
+  _, err := o.Raw("DELETE FROM msg WHERE (sender=? AND receiver=?) OR (sender=? AND receiver=?)", a, b, b, a).Exec()
+  if err == nil {
+    return true
+  }
+  return false
+}
+
 
 /************************************************************************
  * friendlist table
@@ -154,18 +165,11 @@ func (fl *flTbl) Delete(f *JsFl) bool {
   o := orm.NewOrm()
   o.Using("default")
 
-  fid1, ok1 := fl.ReadId(f)
-  fid2, ok2 := fl.ReadId(&JsFl{
-    Username: f.Username,
-    Friusername: f.Friusername,
-  })
-  if ok1 && ok2 {
-    _, err1 := o.Delete(&Friendlist{Fid: fid1})
-    _, err2 := o.Delete(&Friendlist{Fid: fid2})
-    if err1 == nil && err2 == nil{
-      return true
-    }
+  _, err := o.Raw("DELETE FROM friendlist WHERE (username=? AND friusername=?) OR (username=? AND friusername=?)", f.Username, f.Friusername, f.Friusername, f.Username).Exec()
+  if err == nil {
+    return true
   }
+
   return false
 }
 

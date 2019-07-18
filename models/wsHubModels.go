@@ -217,8 +217,6 @@ func (dm *DataModel) Del(d *JsDel, data []byte, hub *HubModel) bool {
   v.WriteMessage(1, data)
 
   return true
-
-
 }
 
 
